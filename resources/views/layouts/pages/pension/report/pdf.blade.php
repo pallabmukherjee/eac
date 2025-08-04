@@ -128,7 +128,7 @@
                     $dr = ($dr_raw - floor($dr_raw)) >= 0.01 ? ceil($dr_raw) : floor($dr_raw);
                     $medical = ceil($item->pensionerDetails->medical_allowance);
                     $other = ceil($item->pensionerDetails->other_allowance);
-                    $gross = $basic_pension + $dr + $medical + $other;
+                    $gross = $item->net_pension;
 
                     $total_basic_pension += $basic_pension;
                     $total_dr += $dr;
