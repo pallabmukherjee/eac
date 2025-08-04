@@ -105,9 +105,9 @@
                 <th>Basic pension</th>
                 <th>D/R</th>
                 <th>M/A</th>
+                <th>Other</th>
                 <th>Arrer</th>
                 <th>Overdrawn</th>
-                <th>Other</th>
                 <th>Total</th>
                 <th>Remarks</th>
             </tr>
