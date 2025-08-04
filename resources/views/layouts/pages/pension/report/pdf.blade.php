@@ -105,6 +105,8 @@
                 <th>Basic pension</th>
                 <th>D/R</th>
                 <th>M/A</th>
+                <th>Arrer</th>
+                <th>Overdrawn</th>
                 <th>Other</th>
                 <th>Total</th>
                 <th>Remarks</th>
@@ -116,6 +118,8 @@
                 $total_dr = 0;
                 $total_medical = 0;
                 $total_other = 0;
+                $total_arrear = 0;
+                $total_overdrawn = 0;
                 $total_gross = 0;
             @endphp
             @foreach ($pensionersReport as $item)
@@ -128,12 +132,16 @@
                     $dr = ($dr_raw - floor($dr_raw)) >= 0.01 ? ceil($dr_raw) : floor($dr_raw);
                     $medical = ceil($item->pensionerDetails->medical_allowance);
                     $other = ceil($item->pensionerDetails->other_allowance);
+                    $arrear = ceil($item->arrear);
+                    $overdrawn = ceil($item->overdrawn);
                     $gross = $item->net_pension;
 
                     $total_basic_pension += $basic_pension;
                     $total_dr += $dr;
                     $total_medical += $medical;
                     $total_other += $other;
+                    $total_arrear += $arrear;
+                    $total_overdrawn += $overdrawn;
                     $total_gross += $gross;
                 @endphp
                 <tr>
@@ -163,6 +171,8 @@
                     <td>{{ number_format($dr, 2) }}</td>
                     <td>{{ number_format($medical, 2) }}</td>
                     <td>{{ number_format($other, 2) }}</td>
+                    <td>{{ number_format($arrear, 2) }}</td>
+                    <td>{{ number_format($overdrawn, 2) }}</td>
                     <td>{{ number_format($gross, 2) }}</td>
                     <td>{{ $item->remarks }}</td>
                 </tr>
@@ -173,6 +183,8 @@
                 <th>{{ number_format($total_dr, 2) }}</th>
                 <th>{{ number_format($total_medical, 2) }}</th>
                 <th>{{ number_format($total_other, 2) }}</th>
+                <th>{{ number_format($total_arrear, 2) }}</th>
+                <th>{{ number_format($total_overdrawn, 2) }}</th>
                 <th>{{ number_format($total_gross, 2) }}</th>
                 <th></th>
             </tr>
