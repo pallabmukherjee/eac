@@ -25,6 +25,29 @@
 </li>
 @endif
 
+@if ($userRole && ($userRole->payment == 1 || $userRole->receipt ==1) )
+<li class="pc-item pc-caption">
+    <label>Pending Actions</label>
+</li>
+<li class="pc-item pc-hasmenu">
+    <a href="#!" class="pc-link">
+        <span class="pc-micon">
+            <i class="ti ti-report"></i>
+        </span>
+        <span class="pc-mtext">Pending Actions</span>
+        <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
+    </a>
+    <ul class="pc-submenu">
+        @if($userRole->payment == 1)
+            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.account.pendingaction.index') }}">Payment Deduction queue</a></li>
+        @endif
+        @if($userRole->receipt == 1)
+            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.account.pendingaction.uncleared') }}">Uncleared Cheque</a></li>
+        @endif
+    </ul>
+</li>
+@endif
+
 @if ($userRole && $userRole->leave == 1)
 <li class="pc-item">
     <a href="{{ route('superadmin.leave.employee.index') }}" class="pc-link">

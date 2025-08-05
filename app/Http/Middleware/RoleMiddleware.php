@@ -46,10 +46,12 @@ class RoleMiddleware
                     'payment' => [
                         'superadmin.account.paymentvoucher*',
                         'superadmin.account.beneficiary*',
+                        'superadmin.account.pendingaction.index'
                     ],
                     'receipt' => [
                         'superadmin.account.receiptvoucher*',
-                        'superadmin.account.beneficiary*',
+                        'superadmin.account.beneficiary*',                        
+                        'superadmin.account.pendingaction.uncleared'
                     ],
                     'contra' => [
                         'superadmin.account.contravoucher*',
