@@ -28,6 +28,7 @@
                                     <th>Leave</th>
                                     <th>Pension</th>
                                     <th>Gratuity</th>
+                                    <th>Report</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,6 +57,9 @@
         <td>
             <input type="checkbox" class="gratuity" data-id="{{ $item->id }}" {{ $item->gratuity ? 'checked' : '' }} />
         </td>
+        <td>
+            <input type="checkbox" class="report" data-id="{{ $item->id }}" {{ $item->report ? 'checked' : '' }} />
+        </td>
     </tr>
 @endforeach
 
@@ -71,6 +75,7 @@
                                     <th>Leave</th>
                                     <th>Pension</th>
                                     <th>Gratuity</th>
+                                    <th>Report</th>
                                 </tr>
                             </tfoot>
                         </table>

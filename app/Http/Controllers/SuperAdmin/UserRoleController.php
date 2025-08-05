@@ -16,7 +16,7 @@ class UserRoleController extends Controller {
         // Validate the incoming request
         $request->validate([
             'user_id' => 'required|exists:user_roles,id',
-            'field' => 'required|in:payment,receipt,contra,journal,leave,pension,gratuity',
+            'field' => 'required|in:payment,receipt,contra,journal,leave,pension,gratuity,report',
             'value' => 'required|boolean',
         ]);
 
@@ -31,6 +31,7 @@ class UserRoleController extends Controller {
                 'leave' => false,
                 'pension' => false,
                 'gratuity' => false,
+                'report' => false,
             ]
         );
 

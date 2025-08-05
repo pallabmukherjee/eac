@@ -95,6 +95,27 @@
             </div>
         </div>
         @endif
+
+        @if ($userRole && $userRole->report == 1)
+        <div class="col-sm-3">
+            <div class="card statistics-card-1">
+                <div class="card-body">
+                    <a href="{{ route('superadmin.account.ledgerhead.index') }}">
+                        <div class="d-flex align-items-center">
+                            <div class="avtar bg-brand-color-4 text-white me-3">
+                                <i class="ti ti-clipboard-list f-26"></i>
+                            </div>
+                            <div>
+                                <div class="d-flex align-items-end">
+                                    <h4 class="mb-0 f-w-500">Report</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
     <!-- [ Main Content ] end -->
 @endsection

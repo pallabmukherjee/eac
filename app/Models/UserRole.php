@@ -9,7 +9,7 @@ class UserRole extends Model
     protected $table = 'user_roles';
 
     protected $fillable = [
-        'user_id', 'payment', 'receipt', 'contra', 'journal', 'leave', 'pension', 'gratuity',
+        'user_id', 'payment', 'receipt', 'contra', 'journal', 'leave', 'pension', 'gratuity', 'report'
     ];
 
     public function user() {

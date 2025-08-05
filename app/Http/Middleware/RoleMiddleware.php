@@ -59,6 +59,10 @@ class RoleMiddleware
                         'superadmin.account.journalvoucher.*',
                         'superadmin.account.beneficiary*',
                     ],
+                    'report' => [
+                        'superadmin.account.ledgerhead.*',
+                        'superadmin.account.report.*',
+                    ],
                     'leave' => 'superadmin.leave.*',
                     'pension' => 'superadmin.pension.*',
                     'gratuity' => 'superadmin.gratuity.*',
