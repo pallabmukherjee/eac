@@ -25,6 +25,7 @@
                                     <th>Date of Retirement</th>
                                     <th>Alive Status</th>
                                     <th>5 Years Completed</th>
+                                    <th>80 Years Completed</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -59,6 +60,18 @@
                                         @endif
                                     </td>
                                     <td>
+                                        @if($item->dob)
+                                            @php
+                                                $eightyYearDate = \Carbon\Carbon::parse($item->dob)->addYears(80);
+                                            @endphp
+                                            @if($eightyYearDate->isPast())
+                                                <span class="text-danger">{{ $eightyYearDate->format('d/m/Y') }}</span>
+                                            @else
+                                                {{ $eightyYearDate->format('d/m/Y') }}
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>
                                         <a href="{{ route('superadmin.pension.edit', $item->id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-edit f-20"></i></a>
                                     </td>
                                 </tr>
@@ -73,6 +86,7 @@
                                     <th>Date of Retirement</th>
                                     <th>Alive Status</th>
                                     <th>5 Years Completed</th>
+                                    <th>80 Years Completed</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
