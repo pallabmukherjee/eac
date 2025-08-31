@@ -1,20 +1,22 @@
 <!-- [ Sidebar Menu ] start -->
 <nav class="pc-sidebar">
     <div class="navbar-wrapper">
-        <div class="m-header">
-            <a href="{{ url('dashboard') }}" class="b-brand text-primary">
-                <!-- ========   Change your logo from here   ============ -->
-                @php
-                $websiteSetting = \App\Models\WebsiteSetting::first();
-                @endphp
-                @if ($websiteSetting && $websiteSetting->logo)
-                    <img src="{{ asset('storage/' . $websiteSetting->logo) }}" height="80">
-                @elseif (!$websiteSetting)
-                    <img src="{{ asset('assets/images/logo-dark.png') }}" class="logo-lg">
-                @endif
-                <p class="text-primary">
-                    {{ $websiteSetting ? ($websiteSetting->name ?? '') : 'E-Accounting' }}
-                </p>
+        <div class="m-header mb-5">
+            <a href="{{ url('dashboard') }}" class="b-brand">
+                <div class="text-center">
+                    <!-- ========   Change your logo from here   ============ -->
+                    @php
+                    $websiteSetting = \App\Models\WebsiteSetting::first();
+                    @endphp
+                    @if ($websiteSetting && $websiteSetting->logo)
+                        <img src="{{ asset('storage/' . $websiteSetting->logo) }}" height="80" class="img-fluid">
+                    @elseif (!$websiteSetting)
+                        <img src="{{ asset('assets/images/logo-dark.png') }}" class="logo-lg">
+                    @endif
+                    <h3 class="fw-bold mt-2 p-2 rounded" style="color: #003366; background-color: #f0f8ff;">
+                        {{ $websiteSetting ? ($websiteSetting->name ?? '') : 'E-Accounting' }}
+                    </h3>
+                </div>
             </a>
         </div>
         <div class="navbar-content">

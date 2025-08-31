@@ -249,6 +249,7 @@ Route::prefix('pension')->name('pension.')->group(function () {
     Route::get('/', [PensionController::class, 'index'])->name('index');
     Route::post('/create', [PensionController::class, 'store'])->name('store');
     Route::get('/list', [PensionController::class, 'list'])->name('list');
+    Route::get('/export', [PensionController::class, 'export'])->name('export');
     Route::get('/edit/{id}', [PensionController::class, 'edit'])->name('edit');
     Route::post('/update/{id}', [PensionController::class, 'update'])->name('update');
     Route::post('/update-life-certificate', [PensionController::class, 'updateLifeCertificate'])->name('updateLifeCertificate');

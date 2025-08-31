@@ -11,7 +11,10 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>Pensioner Data</h4>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Pensioner Data</h4>
+                        <a href="{{ route('superadmin.pension.export') }}" class="btn btn-primary">Download Excel</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="dt-responsive">

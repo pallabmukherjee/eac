@@ -187,6 +187,54 @@ class PensionController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function export()
+    {
+        $pensioners = Pensioner::orderBy('id', 'asc')->get();
+        $fileName = "pensioners.csv";
 
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('PPO Code', 'Pensioner Name', 'Type Of Pension', 'Life Certificate', 'Date of Retirement', 'Alive Status', '5 Years Completed', '5 Years Completed Status', '80 Years Completed', '80 Years Completed Status');
+
+        $callback = function() use($pensioners, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($pensioners as $pensioner) {
+                $row['PPO Code']  = $pensioner->ppo_number;
+                $row['Pensioner Name']    = $pensioner->pensioner_name;
+                $row['Type Of Pension']  = $pensioner->pension_type == 1 ? 'Self' : 'Family member';
+                $row['Life Certificate']  = $pensioner->life_certificate == 1 ? 'Yes' : 'No';
+                $row['Date of Retirement']  = \Carbon\Carbon::parse($pensioner->retirement_date)->format('d/m/Y');
+                $row['Alive Status']  = $pensioner->alive_status == 1 ? 'Alive' : 'Dead';
+
+                $fiveYearDate = \Carbon\Carbon::parse($pensioner->five_year_date);
+                $row['5 Years Completed'] = $fiveYearDate->format('d/m/Y');
+                $row['5 Years Completed Status'] = $fiveYearDate->isPast() ? 'Yes' : 'No';
+
+                if ($pensioner->dob) {
+                    $eightyYearDate = \Carbon\Carbon::parse($pensioner->dob)->addYears(80);
+                    $row['80 Years Completed'] = $eightyYearDate->format('d/m/Y');
+                    $row['80 Years Completed Status'] = $eightyYearDate->isPast() ? 'Yes' : 'No';
+                } else {
+                    $row['80 Years Completed'] = '';
+                    $row['80 Years Completed Status'] = '';
+                }
+
+
+                fputcsv($file, array($row['PPO Code'], $row['Pensioner Name'], $row['Type Of Pension'], $row['Life Certificate'], $row['Date of Retirement'], $row['Alive Status'], $row['5 Years Completed'], $row['5 Years Completed Status'], $row['80 Years Completed'], $row['80 Years Completed Status']));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 
 }
