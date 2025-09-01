@@ -50,17 +50,7 @@
 @endif
 
 
-@if (env('APP_DARK_NAVBAR') == 'true')
-    <script>
-        layout_sidebar_change('dark');
-    </script>
-@endif
 
-@if (env('APP_DARK_NAVBAR') == false)
-    <script>
-        layout_sidebar_change('light');
-    </script>
-@endif
 
 @if (env('APP_BOX_CONTAINER') == false)
     <script>
