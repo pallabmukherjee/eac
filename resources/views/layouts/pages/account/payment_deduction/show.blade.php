@@ -124,19 +124,24 @@
                                         <thead>
                                             <tr>
                                                 <th>Srl</th>
-                                                <th>Account Head</th>
+                                                <th>Ledger Head</th>
                                                 <th>Deduction Remarks</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($ledgerItem as $item)
+                                                @php
+                                                    $ledgerHead = \App\Models\DetailedHead::where(
+                                                        'ledgers_head_code',
+                                                        $item->ledger_head,
+                                                    )->first();
+                                                @endphp
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item->ledger_head }}</td>
-                                                    <td>{{ $item->amount }}</td>
+                                                    <td><b>{{ $item->ledger_head }} ({{ $ledgerHead->name ?? '' }})</b></td>
+                                                    <td><b>{{ $item->amount }}</b></td>
                                                 </tr>
                                             @endforeach
-
                                         </tbody>
                                         <tfoot>
                                             <tr>

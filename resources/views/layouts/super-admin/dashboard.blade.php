@@ -8,6 +8,39 @@
 @endsection
 
 @section('content')
+    <style>
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.2;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #000000;
+            pointer-events: none;
+            text-align: center;
+            z-index: -1;
+            user-select: none;
+        }
+        .watermark img {
+            width: 100%;
+            /* height: 120px; */
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+
+    <div class="watermark">
+        @if (isset($websiteSetting->logo))
+            <img src="{{ asset('storage/' . $websiteSetting->logo) }}" alt="Logo">
+        @endif
+        @if (isset($websiteSetting->organization))
+            <br>
+            {{ $websiteSetting->organization }}
+        @endif
+    </div>
+
 
     <!-- [ Main Content ] start -->
     <div class="row">

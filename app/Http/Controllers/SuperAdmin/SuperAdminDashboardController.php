@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\PVoucharDeduct;
 use App\Models\RvChequeList;
 use App\Models\VoucharEditRequest;
+use App\Models\WebsiteSetting;
 
 class SuperAdminDashboardController extends Controller
 {
     public function dashboard(){
-        return view('layouts.super-admin.dashboard');
+        $websiteSetting = WebsiteSetting::first();
+        return view('layouts.super-admin.dashboard', compact('websiteSetting'));
     }
 
     public function account(){

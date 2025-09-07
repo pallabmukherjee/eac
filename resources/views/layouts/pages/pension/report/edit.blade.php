@@ -24,6 +24,26 @@
                             <form action="{{ route('superadmin.pension.report.update', $report->report_id) }}" method="POST">
                                 @csrf
                                 @method('POST')
+                                <div class="row mb-3 justify-content-center">
+                                    <div class="col-md-2">
+                                        <label for="month" class="form-label">Month</label>
+                                        <select class="form-select" id="month" name="month" required>
+                                            <option value="">Select Month</option>
+                                            @for ($i = 1; $i <= 12; $i++)
+                                                <option value="{{ $i }}" {{ old('month', $report->month) == $i ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $i, 10)) }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="year" class="form-label">Year</label>
+                                        <select class="form-select" id="year" name="year" required>
+                                            <option value="">Select Year</option>
+                                            @for ($i = date('Y'); $i >= date('Y') - 10; $i--)
+                                                <option value="{{ $i }}" {{ old('year', $report->year) == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                </div>
                                 <table class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
