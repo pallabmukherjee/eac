@@ -25,7 +25,7 @@ class PensionOtherBillController extends Controller {
             return redirect()->back()->with('error', 'Report for the current month has already been created.');
         }
 
-        $pensioners = Pensioner::with("ropa")->orderBy('created_at', 'desc')->get();
+        $pensioners = Pensioner::with("ropa")->get();
         return view("layouts.pages.pension.other.create", compact('pensioners'));
     }
 
@@ -63,7 +63,7 @@ class PensionOtherBillController extends Controller {
 
     public function show($report_id) {
         $otherBill = PensionerOtherBill::where('bill_id', $report_id)->first();
-        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $report_id)->orderBy('created_at', 'desc')->get();
+        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $report_id)->where('amount', '>', 0)->orderBy('created_at', 'desc')->get();
         return view("layouts.pages.pension.other.show", compact('pensionersReport', 'otherBill'));
     }
 
@@ -100,7 +100,7 @@ class PensionOtherBillController extends Controller {
 
     public function pdf($bill_id) {
         $report = PensionerOtherBill::where('bill_id', $bill_id)->first();
-        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $bill_id)->orderBy('created_at', 'desc')->get();
+        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $bill_id)->where('amount', '>', 0)->orderBy('created_at', 'desc')->get();
 
         $website = WebsiteSetting::first();
 

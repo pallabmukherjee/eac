@@ -30,6 +30,7 @@
                                 <table class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
+                                            <th>Srl</th>
                                             <th>PPO Code</th>
                                             <th>Pensioner Name</th>
                                             <th>Type Of Pension</th>
@@ -44,6 +45,7 @@
                                     <tbody>
                                         @foreach ($pensioners as $item)
                                             <tr>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->ppo_number }}</td>
                                                 <td>{{ $item->pensioner_name }}</td>
                                                 <td>{{ $item->pension_type == 1 ? 'Self' : 'Family member' }}</td>
@@ -81,6 +83,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
+                                            <th>Srl</th>
                                             <th>PPO Code</th>
                                             <th>Pensioner Name</th>
                                             <th>Type Of Pension</th>

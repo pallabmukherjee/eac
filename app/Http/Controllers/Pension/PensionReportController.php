@@ -22,7 +22,7 @@ class PensionReportController extends Controller
 
     public function create() {
         $currentMonth = now()->format('Y-m');
-        $existingReport = PensionerReport::whereDate('created_at', '>=', now()->startOfMonth())->whereDate('created_at', '<=', now()->endOfMonth())->first();
+        $existingReport = PensionerReport::whereDate('created_at', '>=' , now()->startOfMonth())->whereDate('created_at', '<=', now()->endOfMonth())->first();
 
         if ($existingReport) {
             return redirect()->back()->with('error', 'Report for the current month has already been created.');
@@ -34,7 +34,7 @@ class PensionReportController extends Controller
 
     public function store(Request $request) {
         $currentMonth = now()->format('Y-m');
-        $existingReport = PensionerReport::whereDate('created_at', '>=', now()->startOfMonth())->whereDate('created_at', '<=', now()->endOfMonth())->first();
+        $existingReport = PensionerReport::whereDate('created_at', '>=' , now()->startOfMonth())->whereDate('created_at', '<=', now()->endOfMonth())->first();
         if ($existingReport) {
             return redirect()->route('superadmin.pension.report.index')->with('error', 'Report for the current month has already been created.');
         }
