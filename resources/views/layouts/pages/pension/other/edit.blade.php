@@ -24,6 +24,7 @@
                             <form action="{{ route('superadmin.pension.other.update', $report->bill_id) }}" method="POST">
                                 @csrf
                                 @method('POST')
+                                <input type="text" name="details" class="form-control mb-3" placeholder="Enter Details" value="{{ old('details', $report->details ?? '') }}">
                                 <table class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>

@@ -75,6 +75,7 @@ class PensionOtherBillController extends Controller {
 
     public function update(Request $request, $report_id) {
         $validated = $request->validate([
+            'details' => 'nullable|string',
             'amount' => 'nullable|array',
             'amount.*' => 'nullable|numeric',
         ]);
@@ -84,6 +85,10 @@ class PensionOtherBillController extends Controller {
         if (!$pensionerReport) {
             return redirect()->route('superadmin.pension.other.index')->with('error', 'Report not found!');
         }
+        
+        $pensionerReport->update([
+            'details' => $validated['details'] ?? null
+        ]);
 
         foreach ($request->amount as $pensioner_id => $amount) {
             $amount = $amount ?? 0.00;
@@ -100,7 +105,7 @@ class PensionOtherBillController extends Controller {
 
     public function pdf($bill_id) {
         $report = PensionerOtherBill::where('bill_id', $bill_id)->first();
-        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $bill_id)->where('amount', '>', 0)->orderBy('created_at', 'desc')->get();
+        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $bill_id)->where('amount', '>', 0)->orderBy('id', 'asc')->get();
 
         $website = WebsiteSetting::first();
 

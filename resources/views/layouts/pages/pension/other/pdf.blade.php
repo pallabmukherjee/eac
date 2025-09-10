@@ -59,19 +59,23 @@
     <table class="bordered-table">
         <thead>
             <tr>
-                <th colspan="5">
+                <th colspan="8">
                     <h1>{{ $website->organization }}</h1>
                     <h1>Pensioner Other Bill Report Of {{ \Carbon\Carbon::parse($report->created_at)->format('F-Y') }}</h1>
                     @if($report->details)
                         <p>{{ $report->details }}</p>
                     @endif
+                    <p>Voucher No _______________ Voucher Date _____________</p>
                 </th>
             </tr>
             <tr>
                 <th>Srl</th>
-                <th>Pensioner Name</th>
-                <th>PPO</th>
-                <th>Employee Code</th>
+                <th>Name Of Pensioners</th>
+                <th>Type Of Pension</th>
+                <th>Pensioner In Case Of Family member</th>
+                <th>PPO No</th>
+                <th>Bank A/C</th>
+                <th>IFSC</th>
                 <th>Amount</th>
             </tr>
         </thead>
@@ -82,13 +86,22 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->pensionerDetails->pensioner_name }}</td>
+                    <td>
+                        @if ($item->pensionerDetails->pension_type == 1)
+                            Self
+                        @else
+                            Family member
+                        @endif
+                    </td>
+                    <td>{{ $item->pensionerDetails->family_name }}</td>
                     <td>{{ $item->pensionerDetails->ppo_number }}</td>
-                    <td>{{ $item->pensionerDetails->employee_code }}</td>
+                    <td>{{ $item->pensionerDetails->savings_account_number }}</td>
+                    <td>{{ $item->pensionerDetails->ifsc_code }}</td>
                     <td class="text-right">{{ number_format($item->amount, 2) }}</td>
                 </tr>
             @endforeach
             <tr>
-                <th colspan="4" class="text-right">Total</th>
+                <th colspan="7" class="text-right">Total</th>
                 <th class="text-right">{{ number_format($total_amount, 2) }}</th>
             </tr>
         </tbody>
@@ -98,6 +111,7 @@
     <table>
         <tbody>
             <tr class="no-border">
+                <td><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></td>
                 <td class="text-center">Dealing Assistant<br>{{ $website->organization }}</td>
                 <td width="200px"></td>
                 <td width="200px"></td>

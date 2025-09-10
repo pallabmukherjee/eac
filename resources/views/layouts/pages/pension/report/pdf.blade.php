@@ -164,7 +164,7 @@
                             NA
                         @endif
                     </td>
-                    <td>{{ $item->pensionerDetails->savings_account_number }}</td>
+                    <td>{{ $item->pensionerDetails->savings_account_number }}</td> 
                     <td>{{ $item->pensionerDetails->ifsc_code }}</td>
                     <td>{{ \Carbon\Carbon::parse($item->pensionerDetails->retirement_date)->format('d/m/Y') ?? 'Alive' }}</td>
                     <td>{{ number_format($basic_pension, 2) }}</td>

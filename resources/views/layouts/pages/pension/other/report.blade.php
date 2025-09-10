@@ -14,7 +14,7 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h4>Pensioner Other Bill</h4>
+                            <h4>Pensioner Other Bill Reports</h4>
                         </div>
                         <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
                             <a href="{{ route('superadmin.pension.other.create') }}" class="btn btn-primary">Other Bill Genarate</a>
