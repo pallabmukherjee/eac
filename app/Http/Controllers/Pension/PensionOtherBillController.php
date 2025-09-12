@@ -13,28 +13,16 @@ use PDF;
 
 class PensionOtherBillController extends Controller {
     public function index() {
-        $pensionerReport = PensionerOtherBill::orderBy('created_at', 'desc')->get();
+        $pensionerReport = PensionerOtherBill::latest()->get();
         return view("layouts.pages.pension.other.report", compact('pensionerReport'));
     }
 
     public function create() {
-        $currentMonth = now()->format('Y-m');
-        $existingReport = PensionerOtherBill::whereDate('created_at', '>=', now()->startOfMonth())->whereDate('created_at', '<=', now()->endOfMonth())->first();
-
-        if ($existingReport) {
-            return redirect()->back()->with('error', 'Report for the current month has already been created.');
-        }
-
         $pensioners = Pensioner::with("ropa")->get();
         return view("layouts.pages.pension.other.create", compact('pensioners'));
     }
 
     public function store(Request $request) {
-        $currentMonth = now()->format('Y-m');
-        $existingReport = PensionerOtherBill::whereDate('created_at', '>=', now()->startOfMonth())->whereDate('created_at', '<=', now()->endOfMonth())->first();
-        if ($existingReport) {
-            return redirect()->route('superadmin.pension.other.index')->with('error', 'Report for the current month has already been created.');
-        }
         $validated = $request->validate([
             'details' => 'nullable|string',
             'amount' => 'nullable|array',
@@ -63,13 +51,13 @@ class PensionOtherBillController extends Controller {
 
     public function show($report_id) {
         $otherBill = PensionerOtherBill::where('bill_id', $report_id)->first();
-        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $report_id)->where('amount', '>', 0)->orderBy('created_at', 'desc')->get();
+        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $report_id)->where('amount', '>', 0)->latest()->get();
         return view("layouts.pages.pension.other.show", compact('pensionersReport', 'otherBill'));
     }
 
     public function edit($report_id) {
         $report = PensionerOtherBill::where('bill_id', $report_id)->first();
-        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $report_id)->orderBy('created_at', 'desc')->get();
+        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $report_id)->latest()->get();
         return view("layouts.pages.pension.other.edit", compact('pensionersReport', 'report'));
     }
 
