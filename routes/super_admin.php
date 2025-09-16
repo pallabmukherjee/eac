@@ -284,6 +284,7 @@ Route::prefix('pension')->name('pension.')->group(function () {
         Route::get('/report-edit/{report_id}', [PensionOtherBillController::class, 'edit'])->name('edit');
         Route::post('/report-update/{report_id}', [PensionOtherBillController::class, 'update'])->name('update');
         Route::get('/report-pdf/{report_id}', [PensionOtherBillController::class, 'pdf'])->name('pdf');
+        Route::get('/report-csv/{report_id}', [PensionOtherBillController::class, 'csv'])->name('csv');
     });
 });
 

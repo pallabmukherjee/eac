@@ -14,7 +14,7 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h4>Pensioner Report Details</h4>
+                            <h4>Pensioner Report Details of - {{ \Carbon\Carbon::create()->month($report->month)->format('F') }} {{ $report->year }}</h4>
                         </div>
                         <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
                             <a href="{{ route('superadmin.pension.report.pdf', $report->report_id) }}" class="btn btn-primary" target="_blank">View PDF</a>

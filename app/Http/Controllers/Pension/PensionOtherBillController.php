@@ -105,4 +105,55 @@ class PensionOtherBillController extends Controller {
 
         return $pdf->stream('PensionerReport.pdf');
     }
+
+    public function csv($bill_id) {
+        $report = PensionerOtherBill::where('bill_id', $bill_id)->first();
+        $pensionersReport = PensionerOtherBillSummary::with('pensionerDetails')->where('bill_id', $bill_id)->where('amount', '>', 0)->orderBy('id', 'asc')->get();
+        $website = WebsiteSetting::first();
+
+        $fileName = 'PensionerOtherBill.csv';
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('Srl', 'Name Of Pensioners', 'Type Of Pension', 'Pensioner In Case Of Family member', 'PPO No', 'Bank A/C', 'IFSC', 'Amount');
+
+        $callback = function() use($pensionersReport, $columns, $report, $website) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [$website->organization]);
+            fputcsv($file, ['Pensioner Other Bill Report Of ' . \Carbon\Carbon::parse($report->created_at)->format('F-Y')]);
+            if($report->details){
+                fputcsv($file, [$report->details]);
+            }
+            fputcsv($file, ['Voucher No _______________ Voucher Date _____________']);
+            fputcsv($file, $columns);
+
+            $total_amount = 0;
+            foreach ($pensionersReport as $key => $item) {
+                $total_amount += $item->amount;
+                $row['Srl']  = $key + 1;
+                $row['Name Of Pensioners']    = $item->pensionerDetails->pensioner_name;
+                if ($item->pensionerDetails->pension_type == 1) {
+                    $row['Type Of Pension']  = 'Self';
+                } else {
+                    $row['Type Of Pension']  = 'Family member';
+                }
+                $row['Pensioner In Case Of Family member']    = $item->pensionerDetails->family_name;
+                $row['PPO No']    = $item->pensionerDetails->ppo_number;
+                $row['Bank A/C']    = $item->pensionerDetails->savings_account_number;
+                $row['IFSC']    = $item->pensionerDetails->ifsc_code;
+                $row['Amount']    = number_format($item->amount, 2);
+
+                fputcsv($file, array($row['Srl'], $row['Name Of Pensioners'], $row['Type Of Pension'], $row['Pensioner In Case Of Family member'], $row['PPO No'], $row['Bank A/C'], $row['IFSC'], $row['Amount']));
+            }
+            fputcsv($file, ['', '', '', '', '', '', 'Total', number_format($total_amount, 2)]);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

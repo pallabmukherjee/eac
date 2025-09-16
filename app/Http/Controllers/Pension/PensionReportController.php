@@ -21,24 +21,18 @@ class PensionReportController extends Controller
     }
 
     public function create() {
-        $currentMonth = now()->format('Y-m');
-        $existingReport = PensionerReport::whereDate('created_at', '>=' , now()->startOfMonth())->whereDate('created_at', '<=', now()->endOfMonth())->first();
-
-        if ($existingReport) {
-            return redirect()->back()->with('error', 'Report for the current month has already been created.');
-        }
-
         $pensioners = Pensioner::with("ropa")->orderBy('id', 'asc')->get();
         return view("layouts.pages.pension.report.create", compact('pensioners'));
     }
 
     public function store(Request $request) {
-        $currentMonth = now()->format('Y-m');
-        $existingReport = PensionerReport::whereDate('created_at', '>=' , now()->startOfMonth())->whereDate('created_at', '<=', now()->endOfMonth())->first();
+        $existingReport = PensionerReport::where('month', $request->month)->where('year', $request->year)->first();
         if ($existingReport) {
-            return redirect()->route('superadmin.pension.report.index')->with('error', 'Report for the current month has already been created.');
+            return redirect()->route('superadmin.pension.report.index')->with('error', 'Report for the selected month and year has already been created.');
         }
         $validated = $request->validate([
+            'month' => 'required|numeric|between:1,12',
+            'year' => 'required|numeric',
             'gross' => 'nullable|array',
             'gross.*' => 'nullable|numeric',
             'arrear' => 'nullable|array',
@@ -53,6 +47,8 @@ class PensionReportController extends Controller
 
         $pensionerReport = PensionerReport::create([
             'report_id' => $reportID,
+            'month' => $request->month,
+            'year' => $request->year,
         ]);
 
         // Loop through each pensioner and process the data
@@ -121,6 +117,8 @@ class PensionReportController extends Controller
     public function update(Request $request, $report_id) {
         // Validate the request for the required fields
         $validated = $request->validate([
+            'month' => 'required|numeric|between:1,12',
+            'year' => 'required|numeric',
             'arrear' => 'nullable|array',
             'arrear.*' => 'nullable|numeric',
             'overdrawn' => 'nullable|array',
@@ -135,6 +133,10 @@ class PensionReportController extends Controller
         if (!$pensionerReport) {
             return redirect()->route('superadmin.pension.report.index')->with('error', 'Report not found!');
         }
+
+        $pensionerReport->month = $request->month;
+        $pensionerReport->year = $request->year;
+        $pensionerReport->save();
 
         // Loop through each pensioner and update the required fields
         foreach ($request->arrear as $pensioner_id => $arrear) {

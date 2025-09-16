@@ -9,7 +9,9 @@ class PensionerReport extends Model
     protected $table = 'pensioner_reports';
 
     protected $fillable = [
-        'report_id'
+        'report_id',
+        'month',
+        'year'
     ];
 
 }

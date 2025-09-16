@@ -3,6 +3,15 @@
 @section('title', 'Pensioner Report Generate')
 
 @section('css')
+    <link rel="stylesheet" href="{{ URL::asset('assets/css/plugins/flatpickr.min.css') }}">
+    <style>
+        .flatpickr-calendar .flatpickr-days {
+            display: none;
+        }
+        .flatpickr-weekdays {
+            display: none;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -24,24 +33,12 @@
                             <form action="{{ route('superadmin.pension.report.update', $report->report_id) }}" method="POST">
                                 @csrf
                                 @method('POST')
-                                <div class="row mb-3 justify-content-center">
-                                    <div class="col-md-2">
-                                        <label for="month" class="form-label">Month</label>
-                                        <select class="form-select" id="month" name="month" required>
-                                            <option value="">Select Month</option>
-                                            @for ($i = 1; $i <= 12; $i++)
-                                                <option value="{{ $i }}" {{ old('month', $report->month) == $i ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $i, 10)) }}</option>
-                                            @endfor
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label for="year" class="form-label">Year</label>
-                                        <select class="form-select" id="year" name="year" required>
-                                            <option value="">Select Year</option>
-                                            @for ($i = date('Y'); $i >= date('Y') - 10; $i--)
-                                                <option value="{{ $i }}" {{ old('year', $report->year) == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                            @endfor
-                                        </select>
+                                <div class="d-flex align-items-center mb-3">
+                                    <h5 class="me-3 mb-0">Month and Year</h5>
+                                    <div style="width: 200px;">
+                                        <input type="text" class="form-control" id="month_year" name="month_year" required>
+                                        <input type="hidden" id="month" name="month">
+                                        <input type="hidden" id="year" name="year">
                                     </div>
                                 </div>
                                 <table class="table table-striped table-bordered nowrap">
@@ -127,7 +124,29 @@
 @endsection
 
 @section('scripts')
+<script src="{{ URL::asset('assets/js/plugins/flatpickr.min.js') }}"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        flatpickr("#month_year", {
+            dateFormat: "F Y",
+            defaultDate: new Date({{ $report->year }}, {{ $report->month - 1 }}),
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length > 0) {
+                    const selectedDate = selectedDates[0];
+                    document.getElementById('month').value = selectedDate.getMonth() + 1;
+                    document.getElementById('year').value = selectedDate.getFullYear();
+                }
+            },
+            onReady: function(selectedDates, dateStr, instance) {
+                if (instance.selectedDates.length > 0) {
+                    const selectedDate = instance.selectedDates[0];
+                    document.getElementById('month').value = selectedDate.getMonth() + 1;
+                    document.getElementById('year').value = selectedDate.getFullYear();
+                }
+            }
+        });
+    });
+
     document.querySelectorAll('.no-negative').forEach(function(input) {
         input.addEventListener('input', function (e) {
             // Prevent negative sign entry by replacing it

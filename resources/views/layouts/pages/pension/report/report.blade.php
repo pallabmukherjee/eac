@@ -37,8 +37,8 @@
                                     @foreach ($pensionerReport as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::create()->month($item->month)->format('F') }}</td>
+                                            <td>{{ $item->year }}</td>
                                             <td>
                                                 <a href="{{ route('superadmin.pension.report.show', $item->report_id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-eye f-20"></i></a>
                                                 <a href="{{ route('superadmin.pension.report.edit', $item->report_id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-edit f-20"></i></a>

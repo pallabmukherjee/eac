@@ -18,6 +18,7 @@
                         </div>
                         <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
                             <a href="{{ route('superadmin.pension.other.pdf', $otherBill->bill_id) }}" class="btn btn-primary" target="_blank">View PDF</a>
+                            <a href="{{ route('superadmin.pension.other.csv', $otherBill->bill_id) }}" class="btn btn-success">Download CSV</a>
                         </div>
                     </div>
                 </div>
