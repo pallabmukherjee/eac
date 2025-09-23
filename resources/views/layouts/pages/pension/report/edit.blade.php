@@ -4,14 +4,6 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/css/plugins/flatpickr.min.css') }}">
-    <style>
-        .flatpickr-calendar .flatpickr-days {
-            display: none;
-        }
-        .flatpickr-weekdays {
-            display: none;
-        }
-    </style>
 @endsection
 
 @section('content')
@@ -36,9 +28,15 @@
                                 <div class="d-flex align-items-center mb-3">
                                     <h5 class="me-3 mb-0">Month and Year</h5>
                                     <div style="width: 200px;">
-                                        <input type="text" class="form-control" id="month_year" name="month_year" required>
-                                        <input type="hidden" id="month" name="month">
-                                        <input type="hidden" id="year" name="year">
+                                        @php
+                                            $firstReport = $pensionersReport->first();
+                                            $defaultYear = $firstReport ? $firstReport->year : date('Y');
+                                            $defaultMonth = $firstReport ? $firstReport->month : date('n');
+                                            $defaultDate = \Carbon\Carbon::createFromDate($defaultYear, $defaultMonth, 1);
+                                        @endphp
+                                        <input type="text" class="form-control" id="month_year" name="month_year" value="{{ $defaultDate->format('F Y') }}" required>
+                                        <input type="hidden" id="month" name="month" value="{{ $defaultMonth }}">
+                                        <input type="hidden" id="year" name="year" value="{{ $defaultYear }}">
                                     </div>
                                 </div>
                                 <table class="table table-striped table-bordered nowrap">
@@ -129,7 +127,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         flatpickr("#month_year", {
             dateFormat: "F Y",
-            defaultDate: new Date({{ $report->year }}, {{ $report->month - 1 }}),
             onChange: function(selectedDates, dateStr, instance) {
                 if (selectedDates.length > 0) {
                     const selectedDate = selectedDates[0];

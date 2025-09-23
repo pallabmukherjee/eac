@@ -4,17 +4,12 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/css/plugins/flatpickr.min.css') }}">
-    <style>
-        .flatpickr-calendar .flatpickr-days {
-            display: none;
-        }
-        .flatpickr-weekdays {
-            display: none;
-        }
-    </style>
 @endsection
 
 @section('content')
+    @php
+        $pensioners = $pensioners->where('no_claimant', '!=', 1);
+    @endphp
     <!-- [ Main Content ] start -->
     <div class="row">
         <!-- [ form-element ] start -->

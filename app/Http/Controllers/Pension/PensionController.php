@@ -27,6 +27,7 @@ class PensionController extends Controller
             'ppo_date'             => 'required|date',
             'retirement_date'      => 'required|date',
             'alive_status'         => 'required|in:1,2', // 1 for Alive, 2 for Dead
+            'no_claimant'          => 'required|boolean',
             'death_date'           => 'nullable|date',
             'life_certificate'     => 'required',
             'employee_code'        => 'required|string|max:255',
@@ -66,6 +67,7 @@ class PensionController extends Controller
             'ppo_date'             => $validated['ppo_date'],
             'retirement_date'      => $validated['retirement_date'],
             'alive_status'         => $validated['alive_status'],
+            'no_claimant'          => $validated['no_claimant'],
             'death_date'           => $validated['alive_status'] == 2 ? $validated['death_date'] : null,
             'life_certificate'     => $validated['life_certificate'],
             'five_year_date'       => $five_year_date,
@@ -110,6 +112,7 @@ class PensionController extends Controller
             'dob'                  => 'required|date',
             'retirement_date'      => 'required|date',
             'alive_status'         => 'required|in:1,2', // 1 for Alive, 2 for Dead
+            'no_claimant'          => 'required|boolean',
             'death_date'           => 'nullable|date',
             'employee_code'        => 'required|string|max:255',
             'ppo_number'           => 'required|string|max:255',
@@ -148,6 +151,7 @@ class PensionController extends Controller
             'dob'                  => $validated['dob'],
             'retirement_date'      => $validated['retirement_date'],
             'alive_status'         => $validated['alive_status'],
+            'no_claimant'          => $validated['no_claimant'],
             'death_date'           => $validated['alive_status'] == 2 ? $validated['death_date'] : null,
             'five_year_date'       => $five_year_date,
             'five_year_completed'  => false, // Set default as false

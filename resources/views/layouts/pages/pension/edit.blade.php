@@ -80,6 +80,17 @@
                     @enderror
                 </div>
 
+                <div class="mb-3 col-lg-4">
+                    <label class="form-label">No Claimant:</label>
+                    <div class="form-control">
+                        <label class="me-3"><input type="radio" name="no_claimant" value="0" {{ old('no_claimant', $pensioner->no_claimant) == 0 ? 'checked' : '' }} required> No</label>
+                        <label><input type="radio" name="no_claimant" value="1" {{ old('no_claimant', $pensioner->no_claimant) == 1 ? 'checked' : '' }}> Yes</label>
+                    </div>
+                    @error('no_claimant')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
                 <div id="dateofdeathfield" class="mb-3 col-lg-4" style="display: {{ $pensioner->alive_status == 2 ? 'block' : 'none' }};">
                     <label class="form-label">Date of Death:</label>
                     <input type="date" name="death_date" class="form-control" value="{{ old('death_date', $pensioner->death_date) }}">

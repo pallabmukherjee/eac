@@ -15,6 +15,7 @@ class Pensioner extends Model {
         'ppo_date',
         'retirement_date',
         'alive_status',
+        'no_claimant',
         'death_date',
         'life_certificate',
         'five_year_date',
