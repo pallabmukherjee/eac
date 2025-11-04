@@ -29,9 +29,8 @@
                                     <h5 class="me-3 mb-0">Month and Year</h5>
                                     <div style="width: 200px;">
                                         @php
-                                            $firstReport = $pensionersReport->first();
-                                            $defaultYear = $firstReport ? $firstReport->year : date('Y');
-                                            $defaultMonth = $firstReport ? $firstReport->month : date('n');
+                                            $defaultYear = $report ? $report->year : date('Y');
+                                            $defaultMonth = $report ? $report->month : date('n');
                                             $defaultDate = \Carbon\Carbon::createFromDate($defaultYear, $defaultMonth, 1);
                                         @endphp
                                         <input type="text" class="form-control" id="month_year" name="month_year" value="{{ $defaultDate->format('F Y') }}" required>

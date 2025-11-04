@@ -14,6 +14,8 @@
             font-family: Arial, sans-serif;
         }
 
+
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -75,19 +77,45 @@
             font-weight: bold;
         }
 
-        .no-border td {
-            border: none;
+                .no-border td {
+
+                    border: none;
+
+                }
+
+
+
+
+
+
+
+        
+
+
+
+        .page-number-fixed {
+            position: fixed;
+            top: 30px; /* Adjust as needed */
+            right: 30px; /* Adjust as needed */
+            font-size: 14px;
+            font-family: Arial, sans-serif;
         }
-    </style>
+        .page-number-content:before {
+            content: "Page " counter(page);
+        }
+            </style>
 </head>
 
 <body>
+    <div class="page-number-fixed">
+        <span class="page-number-content"></span>
+    </div>
     <table class="bordered-table">
         <thead>
             <tr>
-                <th colspan="16">
+                <th colspan="18" style="position: relative;">
                     <h1>{{ $website->organization }}</h1>
-                    <h1>Pensioner Report of {{ \Carbon\Carbon::parse($report->created_at)->format('F-Y') }}</h1>
+                    <h1>Pensioner Report of {{ \Carbon\Carbon::create()->month($report->month)->format('F') }} {{ $report->year }}</h1>
                     <p>Voucher No _______________ Voucher Date _____________</p>
                 </th>
             </tr>
@@ -106,22 +134,13 @@
                 <th>D/R</th>
                 <th>M/A</th>
                 <th>Other</th>
-                <th>Arrer</th>
+                <th>Arrear</th>
                 <th>Overdrawn</th>
                 <th>Total</th>
                 <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
-            @php
-                $total_basic_pension = 0;
-                $total_dr = 0;
-                $total_medical = 0;
-                $total_other = 0;
-                $total_arrear = 0;
-                $total_overdrawn = 0;
-                $total_gross = 0;
-            @endphp
             @foreach ($pensionersReport as $item)
                 @php
                     $aadhar = $item->pensionerDetails->aadhar_number;
@@ -135,14 +154,6 @@
                     $arrear = ceil($item->arrear);
                     $overdrawn = ceil($item->overdrawn);
                     $gross = $item->net_pension;
-
-                    $total_basic_pension += $basic_pension;
-                    $total_dr += $dr;
-                    $total_medical += $medical;
-                    $total_other += $other;
-                    $total_arrear += $arrear;
-                    $total_overdrawn += $overdrawn;
-                    $total_gross += $gross;
                 @endphp
                 <tr>
                     <td>{{ $loop->iteration }}</td>
@@ -166,7 +177,7 @@
                     </td>
                     <td>{{ $item->pensionerDetails->savings_account_number }}</td> 
                     <td>{{ $item->pensionerDetails->ifsc_code }}</td>
-                    <td>{{ \Carbon\Carbon::parse($item->pensionerDetails->retirement_date)->format('d/m/Y') ?? 'Alive' }}</td>
+                    <td>{{ $item->pensionerDetails->retirement_date ? \Carbon\Carbon::parse($item->pensionerDetails->retirement_date)->format('d/m/Y') : 'Alive' }}</td>
                     <td>{{ number_format($basic_pension, 2) }}</td>
                     <td>{{ number_format($dr, 2) }}</td>
                     <td>{{ number_format($medical, 2) }}</td>
@@ -191,8 +202,7 @@
         </tbody>
     </table>
 
-    <br><br><br><br>
-    <table>
+    <table style="margin-top: 100px;">
         <tbody>
             <tr class="no-border">
                 <td class="text-center">Dealing Assistant<br>{{ $website->organization }}</td>
@@ -202,8 +212,8 @@
             </tr>
         </tbody>
     </table>
-    <br><br><br>
-    <table>
+    
+    <table style="margin-top: 100px;">
         <tbody>
             <tr class="no-border">
                 <td class="text-center">Accountant<br>{{ $website->organization }}</td>
@@ -213,6 +223,6 @@
             </tr>
         </tbody>
     </table>
-</body>
 
+</body>
 </html>

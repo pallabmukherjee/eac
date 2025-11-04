@@ -127,6 +127,16 @@ class PensionReportController extends Controller
             'remarks.*' => 'nullable|string',
         ]);
 
+        // Check if a report with the same month and year already exists, excluding the current report being updated
+        $existingReport = PensionerReport::where('month', $request->month)
+                                        ->where('year', $request->year)
+                                        ->where('report_id', '!=', $report_id) // Exclude the current report
+                                        ->first();
+
+        if ($existingReport) {
+            return redirect()->back()->with('error', 'A report for the selected month and year already exists.');
+        }
+
         // Find the report by report_id
         $pensionerReport = PensionerReport::where('report_id', $report_id)->first();
 
@@ -169,7 +179,45 @@ class PensionReportController extends Controller
 
         $website = WebsiteSetting::first();
 
-        $pdf = PDF::loadView('layouts.pages.pension.report.pdf', compact('report', 'pensionersReport', 'website'))
+        $total_basic_pension = 0;
+        $total_dr = 0;
+        $total_medical = 0;
+        $total_other = 0;
+        $total_arrear = 0;
+        $total_overdrawn = 0;
+        $total_gross = 0;
+
+        foreach ($pensionersReport as $item) {
+            $basic_pension = ceil($item->pensionerDetails->basic_pension);
+            $dr_raw = ($item->pensionerDetails->basic_pension * $item->pensionerDetails->dr_percentage) / 100;
+            $dr = ($dr_raw - floor($dr_raw)) >= 0.01 ? ceil($dr_raw) : floor($dr_raw);
+            $medical = ceil($item->pensionerDetails->medical_allowance);
+            $other = ceil($item->pensionerDetails->other_allowance);
+            $arrear = ceil($item->arrear);
+            $overdrawn = ceil($item->overdrawn);
+            $gross = $item->net_pension;
+
+            $total_basic_pension += $basic_pension;
+            $total_dr += $dr;
+            $total_medical += $medical;
+            $total_other += $other;
+            $total_arrear += $arrear;
+            $total_overdrawn += $overdrawn;
+            $total_gross += $gross;
+        }
+
+        $pdf = PDF::loadView('layouts.pages.pension.report.pdf', compact(
+            'report', 
+            'pensionersReport', 
+            'website',
+            'total_basic_pension',
+            'total_dr',
+            'total_medical',
+            'total_other',
+            'total_arrear',
+            'total_overdrawn',
+            'total_gross'
+        ))
             ->setOption('margin-top', 0)
             ->setOption('margin-left', 0)
             ->setOption('margin-right', 0)
