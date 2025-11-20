@@ -247,12 +247,14 @@ Route::prefix('account')->name('account.')->group(function () {
 
 Route::prefix('pension')->name('pension.')->group(function () {
     Route::get('/', [PensionController::class, 'index'])->name('index');
+    Route::get('/create', [PensionController::class, 'create'])->name('create');
     Route::post('/create', [PensionController::class, 'store'])->name('store');
-    Route::get('/list', [PensionController::class, 'list'])->name('list');
     Route::get('/export', [PensionController::class, 'export'])->name('export');
+    Route::get('/export-pdf', [PensionController::class, 'exportPdf'])->name('exportPdf');
     Route::get('/edit/{id}', [PensionController::class, 'edit'])->name('edit');
     Route::post('/update/{id}', [PensionController::class, 'update'])->name('update');
     Route::post('/update-life-certificate', [PensionController::class, 'updateLifeCertificate'])->name('updateLifeCertificate');
+    Route::get('/download-life-certificate/{id}', [PensionController::class, 'downloadLifeCertificate'])->name('downloadLifeCertificate');
 
     Route::prefix('/report')->name('report.')->group(function () {
         Route::get('/', [PensionReportController::class, 'index'])->name('index');
@@ -285,6 +287,15 @@ Route::prefix('pension')->name('pension.')->group(function () {
         Route::post('/report-update/{report_id}', [PensionOtherBillController::class, 'update'])->name('update');
         Route::get('/report-pdf/{report_id}', [PensionOtherBillController::class, 'pdf'])->name('pdf');
         Route::get('/report-csv/{report_id}', [PensionOtherBillController::class, 'csv'])->name('csv');
+    });
+
+    Route::prefix('/signs')->name('signs.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Pension\SigningAuthorityController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Pension\SigningAuthorityController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Pension\SigningAuthorityController::class, 'store'])->name('store');
+        Route::get('/{sign}/edit', [\App\Http\Controllers\Pension\SigningAuthorityController::class, 'edit'])->name('edit');
+        Route::put('/{sign}', [\App\Http\Controllers\Pension\SigningAuthorityController::class, 'update'])->name('update');
+        Route::delete('/{sign}', [\App\Http\Controllers\Pension\SigningAuthorityController::class, 'destroy'])->name('destroy');
     });
 });
 

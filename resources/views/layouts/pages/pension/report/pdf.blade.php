@@ -219,7 +219,7 @@
                 <td class="text-center">Accountant<br>{{ $website->organization }}</td>
                 <td class="text-center">Finance Officer<br>{{ $website->organization }}</td>
                 <td class="text-center">Executive Officer.O<br>{{ $website->organization }}</td>
-                <td class="text-center">Chairman<br>{{ $website->organization }}</td>
+                <td class="text-center">Administrator<br>{{ $website->organization }}</td>
             </tr>
         </tbody>
     </table>

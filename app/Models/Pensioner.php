@@ -26,6 +26,8 @@ class Pensioner extends Model {
         'aadhar_number',
         'savings_account_number',
         'ifsc_code',
+        'phone_no',
+        'alternative_phone_no',
         'basic_pension',
         'dr_percentage',
         'medical_allowance',

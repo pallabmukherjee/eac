@@ -1,0 +1,3 @@
+I have ensured that the `exportPdf` method in `app/Http/Controllers/Pension/PensionController.php` uses `return $pdf->stream('pensioners.pdf');`, which instructs the browser to display the PDF inline, typically in a new tab.
+
+If the PDF is still being downloaded instead of opening in a new tab, please check your browser's PDF handling settings. Some browsers are configured to always download PDF files by default. There may also be browser extensions or system-wide settings that override this behavior.

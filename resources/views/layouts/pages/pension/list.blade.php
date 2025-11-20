@@ -8,14 +8,66 @@
 
 @section('content')
     <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white" style="background-image: linear-gradient(to right, #007bff, #00bfff);">
+                <div class="card-body">
+                    <h5 class="card-title">Total Pensioners</h5>
+                    <p class="card-text fs-4">{{ $totalPensioners }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white" style="background-image: linear-gradient(to right, #dc3545, #fd7e14);">
+                <div class="card-body">
+                    <h5 class="card-title">Total Dead</h5>
+                    <p class="card-text fs-4">{{ $totalDead }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white" style="background-image: linear-gradient(to right, #28a745, #20c997);">
+                <div class="card-body">
+                    <h5 class="card-title">Total 5 Years Completed</h5>
+                    <p class="card-text fs-4">{{ $total5YearsCompleted }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white" style="background-image: linear-gradient(to right, #ffc107, #ffcd39);">
+                <div class="card-body">
+                    <h5 class="card-title">Total 80 Years Completed</h5>
+                    <p class="card-text fs-4">{{ $total80YearsCompleted }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white" style="background-image: linear-gradient(to right, #6f42c1, #a750ff);">
+                <div class="card-body">
+                    <h5 class="card-title">Total Reports Generated</h5>
+                    <p class="card-text fs-4">{{ $totalReportsGenerated }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white" style="background-image: linear-gradient(to right, #17a2b8, #20c997);">
+                <div class="card-body">
+                    <h5 class="card-title">Total Life Certificate Yes</h5>
+                    <p class="card-text fs-4">{{ $totalLifeCertificateYes }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0">Pensioner Data</h4>
-                        <a href="{{ route('superadmin.pension.export') }}" class="btn btn-primary">Download Excel</a>
-                    </div>
-                </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                            <h4 class="mb-0">Pensioner Data</h4>
+                                            <div>
+                                                <a href="{{ route('superadmin.pension.export') }}" class="btn btn-primary">Download Excel</a>
+                                                <a href="{{ route('superadmin.pension.exportPdf') }}" class="btn btn-secondary" target="_blank">Download PDF</a>
+                                            </div>
+                                        </div>                </div>
                 <div class="card-body">
                     <div class="dt-responsive">
                         <table id="pensioner-data" class="table table-striped table-bordered nowrap">

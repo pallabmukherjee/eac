@@ -164,6 +164,22 @@
                 </div>
 
                 <div class="mb-3 col-lg-4">
+                    <label class="form-label">Phone No:</label>
+                    <input type="text" name="phone_no" class="form-control" placeholder="Enter Phone No" value="{{ old('phone_no') }}">
+                    @error('phone_no')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="mb-3 col-lg-4">
+                    <label class="form-label">Alternative Phone No:</label>
+                    <input type="text" name="alternative_phone_no" class="form-control" placeholder="Enter Alternative Phone No" value="{{ old('alternative_phone_no') }}">
+                    @error('alternative_phone_no')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="mb-3 col-lg-4">
                     <label class="form-label">Basic Pension:</label>
                     <input type="number" name="basic_pension" class="form-control" placeholder="Enter Basic Pension" value="{{ old('basic_pension') }}" required>
                     @error('basic_pension')

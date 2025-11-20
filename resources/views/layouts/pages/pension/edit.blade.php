@@ -16,6 +16,9 @@
                 <div class="col-sm-6">
                   <h4>Edit Pensioners</h4>
                 </div>
+                <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
+                    <a href="{{ route('superadmin.pension.downloadLifeCertificate', $pensioner->id) }}" class="btn btn-primary" target="_blank">Download Life Certificate</a>
+                </div>
               </div>
           </div>
       <div class="card-body">
@@ -150,6 +153,22 @@
                     <label class="form-label">IFSC Code:</label>
                     <input type="text" name="ifsc_code" class="form-control" placeholder="Enter IFSC Code" value="{{ old('ifsc_code', $pensioner->ifsc_code) }}" required>
                     @error('ifsc_code')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="mb-3 col-lg-4">
+                    <label class="form-label">Phone No:</label>
+                    <input type="text" name="phone_no" class="form-control" placeholder="Enter Phone No" value="{{ old('phone_no', $pensioner->phone_no) }}">
+                    @error('phone_no')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="mb-3 col-lg-4">
+                    <label class="form-label">Alternative Phone No:</label>
+                    <input type="text" name="alternative_phone_no" class="form-control" placeholder="Enter Alternative Phone No" value="{{ old('alternative_phone_no', $pensioner->alternative_phone_no) }}">
+                    @error('alternative_phone_no')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
                 </div>

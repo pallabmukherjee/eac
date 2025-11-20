@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\Pensioner;
 use App\Models\LifeCertificate;
 use App\Models\RopaYear;
+use App\Models\PensionerReport;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PensionController extends Controller
 {
-    public function index() {
+    public function create() {
         $url = route('superadmin.pension.store');
         $ropaYears = RopaYear::orderBy('created_at', 'desc')->get();
         return view("layouts.pages.pension.add", compact('url', 'ropaYears'));
@@ -36,6 +38,8 @@ class PensionController extends Controller
             'aadhar_number'        => 'required|string|max:255',
             'savings_account_number'=> 'required|string|max:255',
             'ifsc_code'            => 'required|string|max:255',
+            'phone_no'             => 'nullable|string|max:15',
+            'alternative_phone_no' => 'nullable|string|max:15',
             'basic_pension'        => 'required|numeric',
             'dr_percentage'        => 'nullable|numeric',
             'medical_allowance'    => 'nullable|numeric',
@@ -78,6 +82,8 @@ class PensionController extends Controller
             'aadhar_number'        => $validated['aadhar_number'],
             'savings_account_number'=> $validated['savings_account_number'],
             'ifsc_code'            => $validated['ifsc_code'],
+            'phone_no'             => $validated['phone_no'],
+            'alternative_phone_no' => $validated['alternative_phone_no'],
             'dr_percentage'        => $drValue,
             'basic_pension'        => $validated['basic_pension'] ?? 0.00,
             'medical_allowance'    => $validated['medical_allowance'] ?? 0.00,
@@ -88,9 +94,24 @@ class PensionController extends Controller
         return redirect()->back()->with('success', 'Pensioner created successfully!');
     }
 
-    public function list() {
+    public function index() {
         $pensioners = Pensioner::orderBy('id', 'asc')->get();
-        return view("layouts.pages.pension.list", compact('pensioners'));
+        $totalPensioners = Pensioner::count();
+        $totalDead = Pensioner::where('alive_status', 2)->count();
+        $total5YearsCompleted = Pensioner::where('five_year_date', '<', now())->count();
+        $total80YearsCompleted = Pensioner::where('dob', '<', now()->subYears(80))->count();
+        $totalReportsGenerated = PensionerReport::count();
+        $totalLifeCertificateYes = Pensioner::where('life_certificate', 1)->count();
+
+        return view("layouts.pages.pension.list", compact(
+            'pensioners',
+            'totalPensioners',
+            'totalDead',
+            'total5YearsCompleted',
+            'total80YearsCompleted',
+            'totalReportsGenerated',
+            'totalLifeCertificateYes'
+        ));
     }
 
     public function edit($id) {
@@ -120,6 +141,8 @@ class PensionController extends Controller
             'aadhar_number'        => 'required|string|max:255',
             'savings_account_number'=> 'required|string|max:255',
             'ifsc_code'            => 'required|string|max:255',
+            'phone_no'             => 'nullable|string|max:15',
+            'alternative_phone_no' => 'nullable|string|max:15',
             'basic_pension'        => 'required|numeric',
             'dr_percentage'        => 'nullable|numeric',
             'medical_allowance'    => 'nullable|numeric',
@@ -161,6 +184,8 @@ class PensionController extends Controller
             'aadhar_number'        => $validated['aadhar_number'],
             'savings_account_number'=> $validated['savings_account_number'],
             'ifsc_code'            => $validated['ifsc_code'],
+            'phone_no'             => $validated['phone_no'],
+            'alternative_phone_no' => $validated['alternative_phone_no'],
             'dr_percentage'        => $drValue,
             'basic_pension'        => $validated['basic_pension'] ?? 0.00,
             'medical_allowance'    => $validated['medical_allowance'] ?? 0.00,
@@ -168,7 +193,7 @@ class PensionController extends Controller
         ]);
 
         // Redirect to a page with a success message
-        return redirect()->route('superadmin.pension.list')->with('success', 'Pensioner updated successfully!');
+        return redirect()->route('superadmin.pension.index')->with('success', 'Pensioner updated successfully!');
     }
 
     public function updateLifeCertificate(Request $request) {
@@ -204,7 +229,7 @@ class PensionController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('PPO Code', 'Pensioner Name', 'Type Of Pension', 'Life Certificate', 'Date of Retirement', 'Alive Status', '5 Years Completed', '5 Years Completed Status', '80 Years Completed', '80 Years Completed Status');
+        $columns = array('PPO Code', 'Pensioner Name', 'Aadhar No', 'Phone No', 'Type Of Pension', 'Life Certificate', 'Date of Retirement', 'Alive Status', '5 Years Completed', '5 Years Completed Status', '80 Years Completed', '80 Years Completed Status');
 
         $callback = function() use($pensioners, $columns) {
             $file = fopen('php://output', 'w');
@@ -213,9 +238,11 @@ class PensionController extends Controller
             foreach ($pensioners as $pensioner) {
                 $row['PPO Code']  = $pensioner->ppo_number;
                 $row['Pensioner Name']    = $pensioner->pensioner_name;
+                $row['Aadhar No'] = $pensioner->aadhar_number;
+                $row['Phone No'] = $pensioner->phone_no;
                 $row['Type Of Pension']  = $pensioner->pension_type == 1 ? 'Self' : 'Family member';
                 $row['Life Certificate']  = $pensioner->life_certificate == 1 ? 'Yes' : 'No';
-                $row['Date of Retirement']  = \Carbon\Carbon::parse($pensioner->retirement_date)->format('d/m/Y');
+                $row['Date of Retirement']  = \Carbon\Carbon::parse($pener->retirement_date)->format('d/m/Y');
                 $row['Alive Status']  = $pensioner->alive_status == 1 ? 'Alive' : 'Dead';
 
                 $fiveYearDate = \Carbon\Carbon::parse($pensioner->five_year_date);
@@ -232,13 +259,29 @@ class PensionController extends Controller
                 }
 
 
-                fputcsv($file, array($row['PPO Code'], $row['Pensioner Name'], $row['Type Of Pension'], $row['Life Certificate'], $row['Date of Retirement'], $row['Alive Status'], $row['5 Years Completed'], $row['5 Years Completed Status'], $row['80 Years Completed'], $row['80 Years Completed Status']));
+                fputcsv($file, array($row['PPO Code'], $row['Pensioner Name'], $row['Aadhar No'], $row['Phone No'], $row['Type Of Pension'], $row['Life Certificate'], $row['Date of Retirement'], $row['Alive Status'], $row['5 Years Completed'], $row['5 Years Completed Status'], $row['80 Years Completed'], $row['80 Years Completed Status']));
             }
 
             fclose($file);
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportPdf()
+    {
+        $pensioners = Pensioner::orderBy('id', 'asc')->get();
+        $pdf = Pdf::loadView('layouts.pages.pension.pdf', compact('pensioners'))
+                  ->setPaper('legal', 'landscape');
+        return $pdf->stream('pensioners.pdf');
+    }
+
+    public function downloadLifeCertificate($id)
+    {
+        $pensioner = Pensioner::findOrFail($id);
+        $pdf = Pdf::loadView('layouts.pages.pension.life_certificate', compact('pensioner'))
+                  ->setPaper('legal', 'portrait');
+        return $pdf->stream('life_certificate.pdf');
     }
 
 }

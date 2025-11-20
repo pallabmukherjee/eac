@@ -11,7 +11,7 @@
 </li>
 
 <li class="pc-item">
-    <a href="{{ route('superadmin.pension.index') }}" class="pc-link">
+    <a href="{{ route('superadmin.pension.create') }}" class="pc-link">
         <span class="pc-micon">
         <i class="ti ti-user-plus"></i>
         </span>
@@ -19,7 +19,7 @@
     </a>
 </li>
 <li class="pc-item">
-    <a href="{{ route('superadmin.pension.list') }}" class="pc-link">
+    <a href="{{ route('superadmin.pension.index') }}" class="pc-link">
         <span class="pc-micon">
         <i class="ti ti-user"></i>
         </span>
@@ -56,6 +56,7 @@
     </a>
     <ul class="pc-submenu">
         <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.pension.ropa.index') }}">Ropa year</a></li>
+        <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.pension.signs.index') }}">Signs</a></li>
     </ul>
 </li>
 

@@ -227,98 +227,108 @@ class PensionReportController extends Controller
     }
 
     public function csv($report_id)
-{
-    $report = PensionerReport::where('report_id', $report_id)->first();
-    $pensionersReport = PensionerReportSummary::with('pensionerDetails')->where('report_id', $report_id)->orderBy('id', 'asc')->get();
-    $website = WebsiteSetting::first();
+    {
+        $report = PensionerReport::where('report_id', $report_id)->first();
+        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->where('report_id', $report_id)->orderBy('id', 'asc')->get();
+        $website = WebsiteSetting::first();
 
-    // Set headers for CSV download
-    $filename = 'PensionerReport_' . \Carbon\Carbon::parse($report->created_at)->format('F-Y') . '.csv';
-    $headers = [
-        'Content-Type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=\"$filename\"",
-    ];
+        $filename = 'PensionerReport_' . \Carbon\Carbon::parse($report->created_at)->format('F-Y') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
 
-    // Create CSV content
-    $callback = function() use ($pensionersReport, $website, $report) {
-        $file = fopen('php://output', 'w');
-
-        // Header row
-        fputcsv($file, [
-            'Name Of Pensioners',
-            'Aadhaar No',
-            'Type Of Pension',
-            'Pensioner In Case Of Family Pension',
-            'PPO Number',
-            'PPO Date',
-            'Bank AC No.',
-            'IFSC CODE',
-            'Date of Retirement',
-            'Basic Pension',
-            'D/R',
-            'M/A',
-            'Other',
-            'Total',
-            'Remarks'
-        ]);
-
-        // Initialize totals
-        $total_basic_pension = 0;
-        $total_dr = 0;
-        $total_medical = 0;
-        $total_other = 0;
-        $total_gross = 0;
-
-        // Data rows
-        foreach ($pensionersReport as $item) {
-            $aadhar = $item->pensionerDetails->aadhar_number;
-            $masked = str_repeat('*', strlen($aadhar) - 4) . substr($aadhar, -4);
-
-            $basic_pension = $item->pensionerDetails->basic_pension;
-            $dr = ($item->pensionerDetails->basic_pension * $item->pensionerDetails->dr_percentage) / 100;
-            $medical = $item->pensionerDetails->medical_allowance;
-            $other = $item->pensionerDetails->other_allowance;
-            $gross = $item->gross;
-
-            $total_basic_pension += $basic_pension;
-            $total_dr += $dr;
-            $total_medical += $medical;
-            $total_other += $other;
-            $total_gross += $gross;
+        $callback = function() use ($pensionersReport, $website, $report) {
+            $file = fopen('php://output', 'w');
 
             fputcsv($file, [
-                $item->pensionerDetails->pensioner_name,
-                $masked,
-                $item->pensionerDetails->pension_type == 1 ? 'Self' : 'Family member',
-                $item->pensionerDetails->family_name,
-                $item->pensionerDetails->ppo_number,
-                $item->pensionerDetails->ppo_date ? \Carbon\Carbon::parse($item->pensionerDetails->ppo_date)->format('d/m/Y') : 'NA',
-                $item->pensionerDetails->savings_account_number,
-                $item->pensionerDetails->ifsc_code,
-                $item->pensionerDetails->retirement_date ? \Carbon\Carbon::parse($item->pensionerDetails->retirement_date)->format('d/m/Y') : 'Alive',
-                number_format(ceil($basic_pension), 2),
-                number_format(ceil($dr), 2),
-                number_format($medical, 2),
-                number_format($other, 2),
-                number_format($gross, 2),
-                $item->remarks
+                'Sl. No',
+                'Name Of Pensioners',
+                'Aadhaar No',
+                'Type Of Pension',
+                'Pensioner In Case Of Family member',
+                'PPO Number',
+                'PPO Date',
+                'Bank AC No.',
+                'IFSC CODE',
+                'Date of Retirement',
+                'Basic pension',
+                'D/R',
+                'M/A',
+                'Other',
+                'Arrear',
+                'Overdrawn',
+                'Total',
+                'Remarks'
             ]);
-        }
 
-        // Total row
-        fputcsv($file, [
-            'Total', '', '', '', '', '', '', '', '',
-            number_format(ceil($total_basic_pension), 2),
-            number_format(ceil($total_dr), 2),
-            number_format($total_medical, 2),
-            number_format($total_other, 2),
-            number_format($total_gross, 2),
-            ''
-        ]);
+            $total_basic_pension = 0;
+            $total_dr = 0;
+            $total_medical = 0;
+            $total_other = 0;
+            $total_arrear = 0;
+            $total_overdrawn = 0;
+            $total_gross = 0;
+            $sl_no = 1;
 
-        fclose($file);
-    };
+            foreach ($pensionersReport as $item) {
+                $aadhar = $item->pensionerDetails->aadhar_number;
+                $masked = str_repeat('*', strlen($aadhar) - 4) . substr($aadhar, -4);
 
-    return response()->stream($callback, 200, $headers);
-}
+                $basic_pension = ceil($item->pensionerDetails->basic_pension);
+                $dr_raw = ($item->pensionerDetails->basic_pension * $item->pensionerDetails->dr_percentage) / 100;
+                $dr = ($dr_raw - floor($dr_raw)) >= 0.01 ? ceil($dr_raw) : floor($dr_raw);
+                $medical = ceil($item->pensionerDetails->medical_allowance);
+                $other = ceil($item->pensionerDetails->other_allowance);
+                $arrear = ceil($item->arrear);
+                $overdrawn = ceil($item->overdrawn);
+                $gross = $item->net_pension;
+
+                $total_basic_pension += $basic_pension;
+                $total_dr += $dr;
+                $total_medical += $medical;
+                $total_other += $other;
+                $total_arrear += $arrear;
+                $total_overdrawn += $overdrawn;
+                $total_gross += $gross;
+
+                fputcsv($file, [
+                    $sl_no++,
+                    $item->pensionerDetails->pensioner_name,
+                    $masked,
+                    $item->pensionerDetails->pension_type == 1 ? 'Self' : 'Family member',
+                    $item->pensionerDetails->family_name,
+                    $item->pensionerDetails->ppo_number,
+                    $item->pensionerDetails->ppo_date ? \Carbon\Carbon::parse($item->pensionerDetails->ppo_date)->format('d/m/Y') : 'NA',
+                    $item->pensionerDetails->savings_account_number,
+                    $item->pensionerDetails->ifsc_code,
+                    $item->pensionerDetails->retirement_date ? \Carbon\Carbon::parse($item->pensionerDetails->retirement_date)->format('d/m/Y') : 'Alive',
+                    number_format($basic_pension, 2),
+                    number_format($dr, 2),
+                    number_format($medical, 2),
+                    number_format($other, 2),
+                    number_format($arrear, 2),
+                    number_format($overdrawn, 2),
+                    number_format($gross, 2),
+                    $item->remarks
+                ]);
+            }
+
+            fputcsv($file, [
+                'Total', '', '', '', '', '', '', '', '', '',
+                number_format($total_basic_pension, 2),
+                number_format($total_dr, 2),
+                number_format($total_medical, 2),
+                number_format($total_other, 2),
+                number_format($total_arrear, 2),
+                number_format($total_overdrawn, 2),
+                number_format($total_gross, 2),
+                ''
+            ]);
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }
