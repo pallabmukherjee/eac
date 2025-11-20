@@ -3,102 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Life Certificate</title>
+    <title>Krishnanagar Municipal Pension Form</title>
     <style>
-        body { font-family: 'Times New Roman', Times, serif; margin: 0; padding: 0; font-size: 12pt; }
-        .container { padding: 40px; }
-        .header, .footer { text-align: center; }
-        .header h1 { font-size: 16pt; font-weight: bold; text-decoration: underline; }
-        .content { margin-top: 20px; }
-        .pensioner-details, .certification { margin-top: 30px; }
-        table { width: 100%; border-collapse: collapse; }
-        td { padding: 8px; vertical-align: top; }
-        .photo-box { border: 1px solid #000; width: 120px; height: 150px; text-align: center; float: right; }
-        .signature-box { border-top: 1px solid #000; width: 250px; margin-top: 40px; }
-        .office-seal { border: 1px solid #000; width: 150px; height: 70px; text-align: center; margin-top: 20px; }
+        @page {
+            /* Legal paper is 8.5in x 14in */
+            margin: 0.3in; /* Uniform margin for top, right, bottom, left */
+        }
+        body {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 14px;
+            line-height: 1.4;
+            margin: 0; /* No body margin */
+            padding: 0; /* No body padding */
+        }
+
+        .page {
+            /* Remove width and min-height, let it expand to legal page dimensions */
+            background: white;
+            margin: 0 auto; /* Center the content */
+            padding: 0; /* Remove padding from .page, margins are controlled by @page */
+            box-sizing: border-box;
+            /* box-shadow: none; */ /* Remove shadow for print */
+        }
+
+        h1, h2, h3, h4 {
+            text-align: center;
+            margin: 5px 0;
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .sub-text {
+            font-size: 12px;
+        }
+
+        .section {
+            margin-bottom: 5px;
+        }
+
+
+        .dotted-line {
+            border-bottom: 1px dotted #000;
+            display: inline-block;
+            height: 18px;
+            margin: 0 5px;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 10px;
+        }
+
+        .officer-sign-block {
+            text-align: left;
+            width: 40%;
+            margin-left: auto;
+        }
+
+        .non-employment-title {
+            text-decoration: underline;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .declaration-text {
+            text-align: justify;
+            margin-bottom: 10px;
+        }
+
+        .signature-row {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .left-col {
+            width: 40%;
+        }
+
+        .right-col {
+            width: 40%;
+            text-align: right;
+        }
+
+        .center-name {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .family-pension-section {
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 10px 0;
+            margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .witness-section {
+            margin-top: 30px;
+        }
+        
+        .witness-title {
+            text-align: center; 
+            font-weight: bold; 
+            margin-bottom: 10px;
+        }
+
+        .witness-columns {
+            /* display: flex; */ /* Dompdf might have issues with flex for columns */
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .witness-col {
+            width: 48%;
+            display: inline-block; /* Use inline-block for columns */
+            vertical-align: top;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        /* Utility for filling space */
+        .fill-space {
+            flex-grow: 1;
+            border-bottom: 1px dotted #000;
+            margin-left: 5px;
+        }
+        
+        /* Removed @media print specific styles as @page rules handle print styling */
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>LIFE CERTIFICATE FOR PENSIONER</h1>
-        </div>
 
-        <div class="content">
-            <div class="photo-box">
-                <p style="padding-top: 50px;">Passport size photo of the Pensioner to be affixed here</p>
+<div class="page">
+
+    <div class="header">
+        Category of Pension : Krishnanagar Municipal Pension<br>
+        <span class="sub-text">**Please Tick Mark which is applicable</span><br>
+        <u>ANNEXURE</u>
+    </div>
+    <div class="section">
+        <ul>
+            <li>
+                Certified that I have seen the Pensioner Sri / Smt. {{ $pensioner->pensioner_name }}
+            </li>
+            <li>
+                holder of P.P.O. No. {{ $pensioner->ppo_number }}<br>
+                and that he / she is alive on this date {{ date('d-m-Y') }}
+            </li>
+        </ul>
+        
+        <div class="flex-row">
+            <div style="width: 55%;">
+                <ul>
+                    <li>Aadhaar Card No. {{ $pensioner->aadhar_number ?? 'N/A' }}</li>
+                    <li>Account No. {{ $pensioner->savings_account_number ?? 'N/A' }}</li>
+                    <li>Name of the Bank <span class="dotted-line" style="width: 145px"></span></li>
+                    <li>Name of the Branch <span class="dotted-line" style="width: 140px"></span></li>
+                </ul>
             </div>
-
-            <p>Certified that I have seen the Pensioner, <strong>{{ $pensioner->pensioner_name }}</strong>, holder of Pension Payment Order (PPO) No. <strong>{{ $pensioner->ppo_number }}</strong> on this day of {{ date('d-m-Y') }} and that he/she is alive.</p>
-
-            <div class="pensioner-details">
-                <table>
-                    <tr>
-                        <td width="30%">Name of Pensioner</td>
-                        <td width="70%">: <strong>{{ $pensioner->pensioner_name }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>PPO No.</td>
-                        <td>: <strong>{{ $pensioner->ppo_number }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Savings Bank A/c No.</td>
-                        <td>: <strong>{{ $pensioner->savings_account_number }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Date of Birth</td>
-                        <td>: <strong>{{ \Carbon\Carbon::parse($pensioner->dob)->format('d/m/Y') }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="padding-top: 40px;">
-                            <div class="signature-box">
-                                (Signature of the Pensioner)
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <hr style="margin-top: 40px;">
-
-            <div class="certification">
-                <h2 class="header"><u>CERTIFICATE BY AN AUTHORISED OFFICER</u></h2>
-                <p>This is to certify that the above mentioned Pensioner has appeared before me on this day, {{ date('d-m-Y') }}.</p>
-
-                <table style="margin-top: 50px;">
-                    <tr>
-                        <td width="50%">
-                            <div class="signature-box">
-                                (Signature of the Authorised Officer)
-                            </div>
-                            <p>Name:</p>
-                            <p>Designation:</p>
-                        </td>
-                        <td width="50%" style="text-align: right;">
-                            <div class="office-seal">
-                                <p style="padding-top: 20px;">Office Seal</p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div style="margin-top: 40px; font-size: 10pt;">
-                <p style="text-align: left; font-weight: bold;"><u>Persons authorised to sign Life Certificate:</u></p>
-                <ol>
-                    <li>A person exercising the power of a Magistrate under the criminal procedure code.</li>
-                    <li>A Registrar or sub-Registrar appointed under the Indian Registration Act.</li>
-                    <li>A Gazetted Government Servant.</li>
-                    <li>A Police Officer not below the rank of Sub-Inspector in-charge of a Police Station.</li>
-                    <li>A Post Master, Departmental Sub-Post Master or an Inspector of Post Office.</li>
-                    <li>A Class-I Officer of the Reserve Bank of India, an Officer (Grade-II) of the State Bank of India or an Officer of its subsidiary.</li>
-                    <li>The Justice of Peace.</li>
-                    <li>A Block Development Officer, Munsiff, Tehsildar or Naib Tehsildar.</li>
-                    <li>A Head of a Village Panchayat, Gram Panchayat, Gaon Panchayat or an Executive Committee of a Village.</li>
-                    <li>A Member of Parliament, of State Legislatures or of legislatures of Union Territory Government / Administration.</li>
-                </ol>
+            <div class="officer-sign-block">
+                <br>
+                <i>Signature of the Officer</i><br>
+                Designation - <br>
+                Dated - 
             </div>
         </div>
     </div>
+
+    <div class="non-employment-title">NON EMPLOYMENT CERTIFICATE</div>
+
+    <div class="section">
+        <p class="declaration-text">
+            I declare that I have not received any remuneration for serving any establishment of the Central Govt. or State Govt. or Local Bodies undertaking or from Local Fund during the period from <span class="dotted-line" style="width: 100px"></span> to <span class="dotted-line" style="width: 100px"></span>.
+        </p>
+        <p class="declaration-text">
+            **I declare that I have been employed re-employed in the Office of the <span class="dotted-line" style="width: 150px"></span> ................................................................................................................. and I was in receipt of the following emoluments during the period.
+        </p>
+        <p class="declaration-text">
+            *I declare that I have accepted commercial employment after obtaining / without obtaining sanction of the Govt.
+        </p>
+        <p class="declaration-text">
+            *I declare that I have / have not accepted any employment under any Govt. outside India after obtaining / without obtaining sanction of the Govt.
+        </p>
+
+        <div class="signature-row">
+            <div class="left-col">
+                Place <span class="dotted-line" style="width: 150px"></span><br>
+                Date <span class="dotted-line" style="width: 150px"></span><br>
+            </div>
+            <div class="right-col">
+                <br>
+                <i>L. T. I. / Signature of the Pensioner</i>
+            </div>
+        </div>
+
+        <div class="center-name">
+            Full Name {{ $pensioner->pensioner_name }}
+        </div>
+    </div>
+
+    <div class="family-pension-section">
+        Yearly declaration be widow / widower / daughter son of the pensioner whose pension is terminable on their marriage / re-marriage (For Family Pensioner)
+    </div>
+
+    <div class="section">
+        <p class="declaration-text">
+            I have declared that I am not married / have not re-married during this year and I undertake to report such an event promptly to the Treasury.
+        </p>
+
+        <div class="signature-row">
+            <div class="left-col">
+                A/c No. {{ $pensioner->savings_account_number ?? 'N/A' }}<br>
+                Name of the Bank <span class="dotted-line" style="width: 140px"></span><br>
+                & Branch
+            </div>
+            <div class="right-col">
+                <i>L. T. I. / Signature of the Pensioner</i>
+            </div>
+        </div>
+    </div>
+
+    <div class="witness-section">
+        <div class="witness-title">** To be signed by two responsible officers or known persons :</div>
+        <p style="text-align: center;">We certify that to the best of our knowledge and belief that the above declaration is correct.</p>
+
+        <div class="witness-columns">
+            <div class="witness-col">
+                1) Signature ......................... <span class="dotted-line fill-space"></span><br><br>
+                &nbsp;&nbsp;&nbsp;Designation .........................  <span class="dotted-line fill-space"></span><br><br>
+                &nbsp;&nbsp;&nbsp;Place .............................  <span class="dotted-line fill-space"></span>
+            </div>
+            <div class="witness-col">
+                2) Signature .........................  <span class="dotted-line fill-space"></span><br><br>
+                &nbsp;&nbsp;&nbsp;Designation .........................  <span class="dotted-line fill-space"></span><br><br>
+                &nbsp;&nbsp;&nbsp;Date .............................  <span class="dotted-line fill-space"></span>
+            </div>
+        </div>
+    </div>
+    <div class="footer-note">
+        To be authenticated by any ward councillor / reputed Doctor having valid registration no.)
+    </div>
+
+</div>
+
 </body>
 </html>
