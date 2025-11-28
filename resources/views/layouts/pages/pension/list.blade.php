@@ -69,8 +69,8 @@
                                             </div>
                                         </div>                </div>
                 <div class="card-body">
-                    <div class="dt-responsive">
-                        <table id="pensioner-data" class="table table-striped table-bordered nowrap">
+                    <div class="dt-responsive table-responsive">
+                        <table id="pensioner-data" class="table table-striped table-bordered table-sm">
                             <thead>
                                 <tr>
                                     <th>Sl. No.</th>
@@ -134,20 +134,7 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Sl. No.</th>
-                                    <th>PPO Code</th>
-                                    <th>Pensioner Name</th>
-                                    <th>Type Of Pension</th>
-                                    <th>Life Certificate</th>
-                                    <th>Date of Retirement</th>
-                                    <th>Alive Status</th>
-                                    <th>5 Years Completed</th>
-                                    <th>80 Years Completed</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
+
                         </table>
                     </div>
                 </div>
