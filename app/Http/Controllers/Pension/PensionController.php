@@ -216,10 +216,34 @@ class PensionController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        $pensioners = Pensioner::orderBy('id', 'asc')->get();
+        $type = $request->query('type');
+        $query = Pensioner::orderBy('id', 'asc');
         $fileName = "pensioners.csv";
+
+        if ($type === 'dead') {
+            $query->where('alive_status', 2);
+            $fileName = "Total Dead.csv";
+            $cardTitle = "Total Dead";
+        } elseif ($type === '5years') {
+            $query->where('five_year_date', '<', now());
+            $fileName = "Total 5 Years Completed.csv";
+            $cardTitle = "Total 5 Years Completed";
+        } elseif ($type === '80years') {
+            $query->where('dob', '<', now()->subYears(80));
+            $fileName = "Total 80 Years Completed.csv";
+            $cardTitle = "Total 80 Years Completed";
+        } elseif ($type === 'life_cert_yes') {
+            $query->where('life_certificate', 1);
+            $fileName = "Total Life Certificate Yes.csv";
+            $cardTitle = "Total Life Certificate Yes";
+        } else {
+            $fileName = "Total Pensioners.csv"; // Default for 'all' type
+            $cardTitle = "Total Pensioners"; // Default card title
+        }
+
+        $pensioners = $query->get();
 
         $headers = array(
             "Content-type"        => "text/csv",
@@ -229,20 +253,22 @@ class PensionController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('PPO Code', 'Pensioner Name', 'Aadhar No', 'Phone No', 'Type Of Pension', 'Life Certificate', 'Date of Retirement', 'Alive Status', '5 Years Completed', '5 Years Completed Status', '80 Years Completed', '80 Years Completed Status');
+        $columns = array('Sl. No.', 'PPO Code', 'Pensioner Name', 'Family Pensioner Name', 'Aadhar No', 'Phone No', 'Type Of Pension', 'Life Certificate', 'Date of Retirement', 'Alive Status', '5 Years Completed', '5 Years Completed Status', '80 Years Completed', '80 Years Completed Status');
 
-        $callback = function() use($pensioners, $columns) {
+        $callback = function() use($pensioners, $columns, $cardTitle) {
             $file = fopen('php://output', 'w');
+            fputcsv($file, [$cardTitle]); // Write title first
             fputcsv($file, $columns);
 
             foreach ($pensioners as $pensioner) {
                 $row['PPO Code']  = $pensioner->ppo_number;
                 $row['Pensioner Name']    = $pensioner->pensioner_name;
+                $row['Family Pensioner Name'] = $pensioner->family_name;
                 $row['Aadhar No'] = $pensioner->aadhar_number;
                 $row['Phone No'] = $pensioner->phone_no;
                 $row['Type Of Pension']  = $pensioner->pension_type == 1 ? 'Self' : 'Family member';
                 $row['Life Certificate']  = $pensioner->life_certificate == 1 ? 'Yes' : 'No';
-                $row['Date of Retirement']  = \Carbon\Carbon::parse($pener->retirement_date)->format('d/m/Y');
+                $row['Date of Retirement']  = \Carbon\Carbon::parse($pensioner->retirement_date)->format('d/m/Y');
                 $row['Alive Status']  = $pensioner->alive_status == 1 ? 'Alive' : 'Dead';
 
                 $fiveYearDate = \Carbon\Carbon::parse($pensioner->five_year_date);
@@ -259,7 +285,7 @@ class PensionController extends Controller
                 }
 
 
-                fputcsv($file, array($row['PPO Code'], $row['Pensioner Name'], $row['Aadhar No'], $row['Phone No'], $row['Type Of Pension'], $row['Life Certificate'], $row['Date of Retirement'], $row['Alive Status'], $row['5 Years Completed'], $row['5 Years Completed Status'], $row['80 Years Completed'], $row['80 Years Completed Status']));
+                fputcsv($file, array($pensioner->id, $row['PPO Code'], $row['Pensioner Name'], $row['Family Pensioner Name'], $row['Aadhar No'], $row['Phone No'], $row['Type Of Pension'], $row['Life Certificate'], $row['Date of Retirement'], $row['Alive Status'], $row['5 Years Completed'], $row['5 Years Completed Status'], $row['80 Years Completed'], $row['80 Years Completed Status']));
             }
 
             fclose($file);

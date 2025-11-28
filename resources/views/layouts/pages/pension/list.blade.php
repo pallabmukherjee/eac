@@ -11,7 +11,7 @@
         <div class="col-md-4">
             <div class="card text-white" style="background-image: linear-gradient(to right, #007bff, #00bfff);">
                 <div class="card-body">
-                    <h5 class="card-title">Total Pensioners</h5>
+                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export') }}" class="text-white">Total Pensioners</a></h5>
                     <p class="card-text fs-4">{{ $totalPensioners }}</p>
                 </div>
             </div>
@@ -19,7 +19,7 @@
         <div class="col-md-4">
             <div class="card text-white" style="background-image: linear-gradient(to right, #dc3545, #fd7e14);">
                 <div class="card-body">
-                    <h5 class="card-title">Total Dead</h5>
+                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export', ['type' => 'dead']) }}" class="text-white">Total Dead</a></h5>
                     <p class="card-text fs-4">{{ $totalDead }}</p>
                 </div>
             </div>
@@ -27,7 +27,7 @@
         <div class="col-md-4">
             <div class="card text-white" style="background-image: linear-gradient(to right, #28a745, #20c997);">
                 <div class="card-body">
-                    <h5 class="card-title">Total 5 Years Completed</h5>
+                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export', ['type' => '5years']) }}" class="text-white">Total 5 Years Completed</a></h5>
                     <p class="card-text fs-4">{{ $total5YearsCompleted }}</p>
                 </div>
             </div>
@@ -35,7 +35,7 @@
         <div class="col-md-4">
             <div class="card text-white" style="background-image: linear-gradient(to right, #ffc107, #ffcd39);">
                 <div class="card-body">
-                    <h5 class="card-title">Total 80 Years Completed</h5>
+                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export', ['type' => '80years']) }}" class="text-white">Total 80 Years Completed</a></h5>
                     <p class="card-text fs-4">{{ $total80YearsCompleted }}</p>
                 </div>
             </div>
@@ -43,7 +43,7 @@
         <div class="col-md-4">
             <div class="card text-white" style="background-image: linear-gradient(to right, #6f42c1, #a750ff);">
                 <div class="card-body">
-                    <h5 class="card-title">Total Reports Generated</h5>
+                    <h5 class="card-title"><a href="{{ route('superadmin.pension.report.index') }}" class="text-white">Total Reports Generated</a></h5>
                     <p class="card-text fs-4">{{ $totalReportsGenerated }}</p>
                 </div>
             </div>
@@ -51,7 +51,7 @@
         <div class="col-md-4">
             <div class="card text-white" style="background-image: linear-gradient(to right, #17a2b8, #20c997);">
                 <div class="card-body">
-                    <h5 class="card-title">Total Life Certificate Yes</h5>
+                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export', ['type' => 'life_cert_yes']) }}" class="text-white">Total Life Certificate Yes</a></h5>
                     <p class="card-text fs-4">{{ $totalLifeCertificateYes }}</p>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                             <h4 class="mb-0">Pensioner Data</h4>
                                             <div>
-                                                <a href="{{ route('superadmin.pension.export') }}" class="btn btn-primary">Download Excel</a>
+
                                                 <a href="{{ route('superadmin.pension.exportPdf') }}" class="btn btn-secondary" target="_blank">Download PDF</a>
                                             </div>
                                         </div>                </div>
@@ -73,6 +73,7 @@
                         <table id="pensioner-data" class="table table-striped table-bordered nowrap">
                             <thead>
                                 <tr>
+                                    <th>Sl. No.</th>
                                     <th>PPO Code</th>
                                     <th>Pensioner Name</th>
                                     <th>Type Of Pension</th>
@@ -87,6 +88,7 @@
                             <tbody>
                                 @foreach($pensioners as $item)
                                 <tr>
+                                    <td>{{ $item->id }}</td>
                                     <td>{{ $item->ppo_number }}</td>
                                     <td>{{ $item->pensioner_name }}</td>
                                     <td>{{ $item->pension_type == 1 ? 'Self' : 'Family member' }}</td>
@@ -134,6 +136,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th>Sl. No.</th>
                                     <th>PPO Code</th>
                                     <th>Pensioner Name</th>
                                     <th>Type Of Pension</th>
