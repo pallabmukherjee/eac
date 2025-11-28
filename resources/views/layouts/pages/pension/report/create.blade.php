@@ -7,9 +7,6 @@
 @endsection
 
 @section('content')
-    @php
-        $pensioners = $pensioners->where('no_claimant', '!=', 1);
-    @endphp
     <!-- [ Main Content ] start -->
     <div class="row">
         <!-- [ form-element ] start -->
