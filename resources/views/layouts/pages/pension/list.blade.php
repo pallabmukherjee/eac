@@ -11,7 +11,7 @@
         <div class="col-md-4">
             <div class="card text-white" style="background-image: linear-gradient(to right, #007bff, #00bfff);">
                 <div class="card-body">
-                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export') }}" class="text-white">Total Pensioners</a></h5>
+                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export') }}" class="text-white">Total Active Pensioners</a></h5>
                     <p class="card-text fs-4">{{ $totalPensioners }}</p>
                 </div>
             </div>

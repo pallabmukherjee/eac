@@ -96,7 +96,7 @@ class PensionController extends Controller
 
     public function index() {
         $pensioners = Pensioner::orderBy('id', 'asc')->get();
-        $totalPensioners = Pensioner::count();
+        $totalPensioners = Pensioner::where('no_claimant', 0)->count();
         $totalDead = Pensioner::where('alive_status', 2)->count();
         $total5YearsCompleted = Pensioner::where('five_year_date', '<', now())->count();
         $total80YearsCompleted = Pensioner::where('dob', '<', now()->subYears(80))->count();
@@ -239,8 +239,9 @@ class PensionController extends Controller
             $fileName = "Total Life Certificate Yes.csv";
             $cardTitle = "Total Life Certificate Yes";
         } else {
-            $fileName = "Total Pensioners.csv"; // Default for 'all' type
-            $cardTitle = "Total Pensioners"; // Default card title
+            $query->where('no_claimant', 0); // Exclude pensioners with no_claimant = 1
+            $fileName = "Total Active Pensioners.csv";
+            $cardTitle = "Total Active Pensioners";
         }
 
         $pensioners = $query->get();
