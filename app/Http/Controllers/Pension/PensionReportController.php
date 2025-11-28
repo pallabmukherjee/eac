@@ -300,7 +300,7 @@ class PensionReportController extends Controller
                     $item->pensionerDetails->family_name,
                     $item->pensionerDetails->ppo_number,
                     $item->pensionerDetails->ppo_date ? \Carbon\Carbon::parse($item->pensionerDetails->ppo_date)->format('d/m/Y') : 'NA',
-                    $item->pensionerDetails->savings_account_number,
+                    $item->pensionerDetails->savings_account_number . "\t",
                     $item->pensionerDetails->ifsc_code,
                     $item->pensionerDetails->retirement_date ? \Carbon\Carbon::parse($item->pensionerDetails->retirement_date)->format('d/m/Y') : 'Alive',
                     number_format($basic_pension, 2),

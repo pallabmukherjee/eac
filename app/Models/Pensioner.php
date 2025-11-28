@@ -34,6 +34,11 @@ class Pensioner extends Model {
         'other_allowance',
     ];
 
+    protected $casts = [
+        'savings_account_number' => 'string',
+        'aadhar_number' => 'string',
+    ];
+
     public function ropa() {
         return $this->belongsTo(RopaYear::class, 'ropa_year');
     }
