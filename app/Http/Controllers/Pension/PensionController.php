@@ -23,41 +23,47 @@ class PensionController extends Controller
         // Validate incoming request data
         $validated = $request->validate([
             'pensioner_name'       => 'required|string|max:255',
-            'pension_type'         => 'required|in:1,2', // 1 for Self, 2 for Family Member
-            'family_name'          => 'required|string|max:255',
+            'pension_type'         => 'nullable|in:1,2', // 1 for Self, 2 for Family Member
+            'family_name'          => 'nullable|string|max:255',
             'dob'                  => 'required|date',
-            'ppo_date'             => 'required|date',
+            'ppo_date'             => 'nullable|date',
             'retirement_date'      => 'required|date',
-            'alive_status'         => 'required|in:1,2', // 1 for Alive, 2 for Dead
+            'alive_status'         => 'nullable|in:1,2', // 1 for Alive, 2 for Dead
             'no_claimant'          => 'required|boolean',
             'death_date'           => 'nullable|date',
             'life_certificate'     => 'required',
-            'employee_code'        => 'required|string|max:255',
-            'ppo_number'           => 'required|string|max:255',
+            'employee_code'        => 'nullable|string|max:255',
+            'ppo_number'           => 'nullable|string|max:255',
             'ropa_year'            => 'required',
-            'aadhar_number'        => 'required|string|max:255',
-            'savings_account_number'=> 'required|string|max:255',
-            'ifsc_code'            => 'required|string|max:255',
+            'aadhar_number'        => 'nullable|string|max:255',
+            'savings_account_number'=> 'nullable|string|max:255',
+            'ifsc_code'            => 'nullable|string|max:255',
             'phone_no'             => 'nullable|string|max:15',
             'alternative_phone_no' => 'nullable|string|max:15',
-            'basic_pension'        => 'required|numeric',
+            'basic_pension'        => 'nullable|numeric',
             'dr_percentage'        => 'nullable|numeric',
             'medical_allowance'    => 'nullable|numeric',
             'other_allowance'      => 'nullable|numeric',
         ]);
 
         $five_year_date = Carbon::parse($validated['dob'])->addYears(65)->toDateString();
+        $alive_status = $validated['alive_status'] ?? null;
 
-        if ($validated['alive_status'] == 1) {
+        if ($alive_status == 1) {
             // If Alive, use the values as they are
             $pensioner_name = $validated['pensioner_name'];
-            $family_name = $validated['family_name'];
-        } else {
+            $family_name = $validated['family_name'] ?? '';
+        } elseif ($alive_status == 2) {
             // If Dead, swap values
-            $pensioner_name = $validated['family_name'];
+            $pensioner_name = $validated['family_name'] ?? '';
             $family_name = "Lt. " . $validated['pensioner_name']; // Prefix 'Lt.' to the pensioner name
+        } else {
+            // If status unknown, use provided values
+             $pensioner_name = $validated['pensioner_name'];
+             $family_name = $validated['family_name'] ?? '';
         }
 
+        $drValue = 0;
         $ropaYear = RopaYear::where('id', $validated['ropa_year'])->first();
         if ($ropaYear) {
             $drValue = $ropaYear->dr; // Get the 'dr' value from the matched RopaYear record
@@ -65,23 +71,23 @@ class PensionController extends Controller
         // Create a new Pensioner record and save it
         $pensioner = Pensioner::create([
             'pensioner_name'      => $pensioner_name,
-            'pension_type'         => $validated['pension_type'],
+            'pension_type'         => $validated['pension_type'] ?? null,
             'family_name'          => $family_name,
             'dob'                  => $validated['dob'],
-            'ppo_date'             => $validated['ppo_date'],
+            'ppo_date'             => $validated['ppo_date'] ?? null,
             'retirement_date'      => $validated['retirement_date'],
-            'alive_status'         => $validated['alive_status'],
+            'alive_status'         => $alive_status,
             'no_claimant'          => $validated['no_claimant'],
-            'death_date'           => $validated['alive_status'] == 2 ? $validated['death_date'] : null,
+            'death_date'           => $alive_status == 2 ? ($validated['death_date'] ?? null) : null,
             'life_certificate'     => $validated['life_certificate'],
             'five_year_date'       => $five_year_date,
             'five_year_completed'  => false, // Set default as false
-            'employee_code'        => $validated['employee_code'],
-            'ppo_number'           => $validated['ppo_number'],
+            'employee_code'        => $validated['employee_code'] ?? null,
+            'ppo_number'           => $validated['ppo_number'] ?? null,
             'ropa_year'            => $validated['ropa_year'],
-            'aadhar_number'        => $validated['aadhar_number'],
-            'savings_account_number'=> $validated['savings_account_number'],
-            'ifsc_code'            => $validated['ifsc_code'],
+            'aadhar_number'        => $validated['aadhar_number'] ?? null,
+            'savings_account_number'=> $validated['savings_account_number'] ?? null,
+            'ifsc_code'            => $validated['ifsc_code'] ?? null,
             'phone_no'             => $validated['phone_no'],
             'alternative_phone_no' => $validated['alternative_phone_no'],
             'dr_percentage'        => $drValue,
@@ -128,39 +134,41 @@ class PensionController extends Controller
         // Validate incoming request data
         $validated = $request->validate([
             'pensioner_name'       => 'required|string|max:255',
-            'pension_type'         => 'required|in:1,2', // 1 for Self, 2 for Family Member
-            'family_name'          => 'required|string|max:255',
+            'pension_type'         => 'nullable|in:1,2', // 1 for Self, 2 for Family Member
+            'family_name'          => 'nullable|string|max:255',
             'dob'                  => 'required|date',
             'retirement_date'      => 'required|date',
-            'alive_status'         => 'required|in:1,2', // 1 for Alive, 2 for Dead
+            'alive_status'         => 'nullable|in:1,2', // 1 for Alive, 2 for Dead
             'no_claimant'          => 'required|boolean',
             'death_date'           => 'nullable|date',
-            'employee_code'        => 'required|string|max:255',
-            'ppo_number'           => 'required|string|max:255',
+            'employee_code'        => 'nullable|string|max:255',
+            'ppo_number'           => 'nullable|string|max:255',
             'ropa_year'            => 'required',
-            'aadhar_number'        => 'required|string|max:255',
-            'savings_account_number'=> 'required|string|max:255',
-            'ifsc_code'            => 'required|string|max:255',
+            'aadhar_number'        => 'nullable|string|max:255',
+            'savings_account_number'=> 'nullable|string|max:255',
+            'ifsc_code'            => 'nullable|string|max:255',
             'phone_no'             => 'nullable|string|max:15',
             'alternative_phone_no' => 'nullable|string|max:15',
-            'basic_pension'        => 'required|numeric',
+            'basic_pension'        => 'nullable|numeric',
             'dr_percentage'        => 'nullable|numeric',
             'medical_allowance'    => 'nullable|numeric',
             'other_allowance'      => 'nullable|numeric',
         ]);
 
         $five_year_date = Carbon::parse($validated['retirement_date'])->addYears(5)->toDateString();
+        $alive_status = $validated['alive_status'] ?? $pensioner->alive_status;
 
-        if ($validated['alive_status'] == 2 && $pensioner->alive_status == 1) {
+        if ($alive_status == 2 && $pensioner->alive_status == 1) {
             // If Alive to Dead, swap the names and add 'Lt.'
-            $pensioner_name = $validated['family_name'];
+            $pensioner_name = $validated['family_name'] ?? '';
             $family_name = "Lt. " . $validated['pensioner_name'];
         } else {
             // If Alive or if no change in status, use the values as they are
             $pensioner_name = $validated['pensioner_name'];
-            $family_name = $validated['family_name'];
+            $family_name = $validated['family_name'] ?? $pensioner->family_name;
         }
 
+        $drValue = $pensioner->dr_percentage;
         $ropaYear = RopaYear::where('id', $validated['ropa_year'])->first();
         if ($ropaYear) {
             $drValue = $ropaYear->dr;
@@ -169,21 +177,21 @@ class PensionController extends Controller
         // Update the existing Pensioner record with the new values
         $pensioner->update([
             'pensioner_name'      => $pensioner_name,
-            'pension_type'         => $validated['pension_type'],
+            'pension_type'         => $validated['pension_type'] ?? $pensioner->pension_type,
             'family_name'          => $family_name,
             'dob'                  => $validated['dob'],
             'retirement_date'      => $validated['retirement_date'],
-            'alive_status'         => $validated['alive_status'],
+            'alive_status'         => $alive_status,
             'no_claimant'          => $validated['no_claimant'],
-            'death_date'           => $validated['alive_status'] == 2 ? $validated['death_date'] : null,
+            'death_date'           => $alive_status == 2 ? ($validated['death_date'] ?? null) : null,
             'five_year_date'       => $five_year_date,
             'five_year_completed'  => false, // Set default as false
-            'employee_code'        => $validated['employee_code'],
-            'ppo_number'           => $validated['ppo_number'],
+            'employee_code'        => $validated['employee_code'] ?? $pensioner->employee_code,
+            'ppo_number'           => $validated['ppo_number'] ?? $pensioner->ppo_number,
             'ropa_year'            => $validated['ropa_year'],
-            'aadhar_number'        => $validated['aadhar_number'],
-            'savings_account_number'=> $validated['savings_account_number'],
-            'ifsc_code'            => $validated['ifsc_code'],
+            'aadhar_number'        => $validated['aadhar_number'] ?? $pensioner->aadhar_number,
+            'savings_account_number'=> $validated['savings_account_number'] ?? $pensioner->savings_account_number,
+            'ifsc_code'            => $validated['ifsc_code'] ?? $pensioner->ifsc_code,
             'phone_no'             => $validated['phone_no'],
             'alternative_phone_no' => $validated['alternative_phone_no'],
             'dr_percentage'        => $drValue,

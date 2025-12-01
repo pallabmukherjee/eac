@@ -48,7 +48,7 @@
                 <!-- Rest of the form fields remain the same -->
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">Family Name:</label>
-                    <input type="text" name="family_name" class="form-control" placeholder="Enter Family Name" value="{{ old('family_name') }}" required>
+                    <input type="text" name="family_name" class="form-control" placeholder="Enter Family Name" value="{{ old('family_name') }}">
                     @error('family_name')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -81,6 +81,17 @@
                     @enderror
                 </div>
 
+                <div class="mb-3 col-lg-4">
+                    <label class="form-label">No Claimant:</label>
+                    <div class="form-control">
+                        <label class="me-3"><input type="radio" name="no_claimant" value="0" {{ old('no_claimant') == 0 ? 'checked' : '' }} required> No</label>
+                        <label><input type="radio" name="no_claimant" value="1" {{ old('no_claimant') == 1 ? 'checked' : '' }}> Yes</label>
+                    </div>
+                    @error('no_claimant')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
                 <div id="dateofdeathfield" class="mb-3 col-lg-4" style="display: none;">
                     <label class="form-label">Date of Death:</label>
                     <input type="text" name="death_date" id="death_date" class="form-control" value="{{ old('death_date') }}">
@@ -102,7 +113,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">Employee Code:</label>
-                    <input type="text" name="employee_code" class="form-control" placeholder="Enter Employee Code" value="{{ old('employee_code') }}" required>
+                    <input type="text" name="employee_code" class="form-control" placeholder="Enter Employee Code" value="{{ old('employee_code') }}">
                     @error('employee_code')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -110,7 +121,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">PPO No.:</label>
-                    <input type="text" name="ppo_number" class="form-control" placeholder="Enter PPO No." value="{{ old('ppo_number') }}" required>
+                    <input type="text" name="ppo_number" class="form-control" placeholder="Enter PPO No." value="{{ old('ppo_number') }}">
                     @error('ppo_number')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -118,7 +129,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">PPO Date:</label>
-                    <input type="text" name="ppo_date" id="ppo_date" class="form-control" value="{{ old('ppo_date') }}" required>
+                    <input type="text" name="ppo_date" id="ppo_date" class="form-control" value="{{ old('ppo_date') }}">
                     @error('ppo_date')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -141,7 +152,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">Aadhar No:</label>
-                    <input type="number" name="aadhar_number" class="form-control" placeholder="Enter Aadhar Number" value="{{ old('aadhar_number') }}" required>
+                    <input type="number" name="aadhar_number" class="form-control" placeholder="Enter Aadhar Number" value="{{ old('aadhar_number') }}">
                     @error('aadhar_number')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -149,7 +160,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">Savings Ac No.:</label>
-                    <input type="number" name="savings_account_number" class="form-control" placeholder="Enter Savings Account No." value="{{ old('savings_account_number') }}" required>
+                    <input type="number" name="savings_account_number" class="form-control" placeholder="Enter Savings Account No." value="{{ old('savings_account_number') }}">
                     @error('savings_account_number')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -157,7 +168,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">IFSC Code:</label>
-                    <input type="text" name="ifsc_code" class="form-control" placeholder="Enter IFSC Code" value="{{ old('ifsc_code') }}" required>
+                    <input type="text" name="ifsc_code" class="form-control" placeholder="Enter IFSC Code" value="{{ old('ifsc_code') }}">
                     @error('ifsc_code')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -181,7 +192,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">Basic Pension:</label>
-                    <input type="number" name="basic_pension" class="form-control" placeholder="Enter Basic Pension" value="{{ old('basic_pension') }}" required>
+                    <input type="number" name="basic_pension" class="form-control" placeholder="Enter Basic Pension" value="{{ old('basic_pension') }}">
                     @error('basic_pension')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -189,7 +200,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">Medical Allowance:</label>
-                    <input type="number" name="medical_allowance" class="form-control" placeholder="Enter Medical Allowance" value="{{ old('medical_allowance') }}" required>
+                    <input type="number" name="medical_allowance" class="form-control" placeholder="Enter Medical Allowance" value="{{ old('medical_allowance') }}">
                     @error('medical_allowance')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -197,7 +208,7 @@
 
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">Other Allowance:</label>
-                    <input type="number" name="other_allowance" class="form-control" placeholder="Enter Other Allowance" value="{{ old('other_allowance') }}" required>
+                    <input type="number" name="other_allowance" class="form-control" placeholder="Enter Other Allowance" value="{{ old('other_allowance') }}">
                     @error('other_allowance')
                         <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
