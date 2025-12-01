@@ -21,7 +21,7 @@ class PensionReportController extends Controller
     }
 
     public function create() {
-        $pensioners = Pensioner::with("ropa")->where('no_claimant', 0)->orderBy('id', 'asc')->get();
+        $pensioners = Pensioner::with("ropa")->where('no_claimant', 0)->where('life_certificate', '!=', 2)->orderBy('id', 'asc')->get();
         return view("layouts.pages.pension.report.create", compact('pensioners'));
     }
 
@@ -104,13 +104,13 @@ class PensionReportController extends Controller
 
     public function show($report_id) {
         $report = PensionerReport::where('report_id', $report_id)->first();
-        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->whereHas('pensionerDetails', function($q) { $q->where('no_claimant', 0); })->where('report_id', $report_id)->orderBy('id', 'asc')->get();
+        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->whereHas('pensionerDetails', function($q) { $q->where('no_claimant', 0)->where('life_certificate', '!=', 2); })->where('report_id', $report_id)->orderBy('id', 'asc')->get();
         return view("layouts.pages.pension.report.show", compact('report', 'pensionersReport'));
     }
 
     public function edit($report_id) {
         $report = PensionerReport::where('report_id', $report_id)->first();
-        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->whereHas('pensionerDetails', function($q) { $q->where('no_claimant', 0); })->where('report_id', $report_id)->orderBy('created_at', 'desc')->get();
+        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->whereHas('pensionerDetails', function($q) { $q->where('no_claimant', 0)->where('life_certificate', '!=', 2); })->where('report_id', $report_id)->orderBy('created_at', 'desc')->get();
         return view("layouts.pages.pension.report.edit", compact('pensionersReport', 'report'));
     }
 
@@ -175,7 +175,7 @@ class PensionReportController extends Controller
 
     public function pdf($report_id) {
         $report = PensionerReport::where('report_id', $report_id)->first();
-        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->whereHas('pensionerDetails', function($q) { $q->where('no_claimant', 0); })->where('report_id', $report_id)->orderBy('id', 'asc')->get();
+        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->whereHas('pensionerDetails', function($q) { $q->where('no_claimant', 0)->where('life_certificate', '!=', 2); })->where('report_id', $report_id)->orderBy('id', 'asc')->get();
 
         $website = WebsiteSetting::first();
 
@@ -229,7 +229,7 @@ class PensionReportController extends Controller
     public function csv($report_id)
     {
         $report = PensionerReport::where('report_id', $report_id)->first();
-        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->whereHas('pensionerDetails', function($q) { $q->where('no_claimant', 0); })->where('report_id', $report_id)->orderBy('id', 'asc')->get();
+        $pensionersReport = PensionerReportSummary::with('pensionerDetails')->whereHas('pensionerDetails', function($q) { $q->where('no_claimant', 0)->where('life_certificate', '!=', 2); })->where('report_id', $report_id)->orderBy('id', 'asc')->get();
         $website = WebsiteSetting::first();
 
         $filename = 'PensionerReport_' . \Carbon\Carbon::parse($report->created_at)->format('F-Y') . '.csv';
