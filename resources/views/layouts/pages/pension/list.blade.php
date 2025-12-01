@@ -158,7 +158,7 @@
     <script>
         $(document).ready(function() {
             // On change of the switch
-            $('input[type="checkbox"].form-check-input').on('change', function() {
+            $(document).on('change', '#pensioner-data input[type="checkbox"].form-check-input', function() {
                 var pensionerId = $(this).data('id'); // Get pensioner ID
                 var lifeCertificateValue = $(this).prop('checked') ? 1 : 2; // Determine the new life_certificate value (1 or 2)
 
