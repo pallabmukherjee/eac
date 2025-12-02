@@ -347,5 +347,5 @@ class PensionReportController extends Controller
         $report->delete();
 
         return redirect()->route('superadmin.pension.report.index')->with('success', 'Report deleted successfully!');
-    
+    }
 }
