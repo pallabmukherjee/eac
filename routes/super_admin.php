@@ -265,6 +265,7 @@ Route::prefix('pension')->name('pension.')->group(function () {
         Route::post('/report-update/{report_id}', [PensionReportController::class, 'update'])->name('update');
         Route::get('/report-pdf/{report_id}', [PensionReportController::class, 'pdf'])->name('pdf');
         Route::get('/report-csv/{report_id}', [PensionReportController::class, 'csv'])->name('csv');
+        Route::delete('/report-delete/{report_id}', [PensionReportController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('/life')->name('life.')->group(function () {

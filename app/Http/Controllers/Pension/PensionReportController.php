@@ -331,4 +331,21 @@ class PensionReportController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    public function destroy($report_id)
+    {
+        $report = PensionerReport::where('report_id', $report_id)->first();
+
+        if (!$report) {
+            return redirect()->route('superadmin.pension.report.index')->with('error', 'Report not found!');
+        }
+
+        // Delete associated PensionerReportSummary records
+        PensionerReportSummary::where('report_id', $report_id)->delete();
+
+        // Delete the PensionerReport record
+        $report->delete();
+
+        return redirect()->route('superadmin.pension.report.index')->with('success', 'Report deleted successfully!');
+    
 }

@@ -42,6 +42,11 @@
                                             <td>
                                                 <a href="{{ route('superadmin.pension.report.show', $item->report_id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-eye f-20"></i></a>
                                                 <a href="{{ route('superadmin.pension.report.edit', $item->report_id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-edit f-20"></i></a>
+                                                <form action="{{ route('superadmin.pension.report.destroy', $item->report_id) }}" method="POST" style="display:inline-block;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="avtar avtar-xs btn-link-danger sa-warning" style="border: none; background: none; cursor: pointer;"><i class="ti ti-trash f-20"></i></button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -63,4 +68,20 @@
         <!-- [ form-element ] end -->
     </div>
     <!-- [ Main Content ] end -->
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('form').forEach(form => {
+            if (form.classList.contains('sa-warning')) {
+                form.addEventListener('submit', function(event) {
+                    if (!confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
+                        event.preventDefault();
+                    }
+                });
+            }
+        });
+    });
+</script>
 @endsection
