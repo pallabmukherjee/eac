@@ -42,10 +42,10 @@
                                             <td>
                                                 <a href="{{ route('superadmin.pension.report.show', $item->report_id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-eye f-20"></i></a>
                                                 <a href="{{ route('superadmin.pension.report.edit', $item->report_id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-edit f-20"></i></a>
-                                                <form action="{{ route('superadmin.pension.report.destroy', $item->report_id) }}" method="POST" style="display:inline-block;">
+                                                <form action="{{ route('superadmin.pension.report.destroy', $item->report_id) }}" method="POST" style="display:inline-block;" class="sa-warning">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="avtar avtar-xs btn-link-danger sa-warning" style="border: none; background: none; cursor: pointer;"><i class="ti ti-trash f-20"></i></button>
+                                                    <button type="submit" class="avtar avtar-xs btn-link-danger" style="border: none; background: none; cursor: pointer;"><i class="ti ti-trash f-20"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
