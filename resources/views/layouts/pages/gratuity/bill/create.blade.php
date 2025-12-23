@@ -1,8 +1,20 @@
 @extends('layouts.main')
 
-@section('title', 'Multi Form Layouts')
+@section('title', 'Gratuity Application')
 
 @section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container .select2-selection--single {
+        height: 38px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 38px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px !important;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -14,148 +26,187 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h4>Create Gratuity Bill</h4>
+                            <h4>Gratuity Application</h4>
                         </div>
                     </div>
                 </div>
-                @if ($gratuityRequest->count())
                 <div class="card-body">
                     <form method="POST" action="{{ $url }}">
                         @csrf
-                        @foreach($gratuityRequest as $item)
-                        <div class="row bg-light rounded-3 p-2 mb-3">
-                            <div class="col-sm-4">
-                                <h6>Gratuity Remaining Amount: {{ $item->empName->ppo_amount }}</h6>
-                            </div>
-                            <div class="col-sm-8">
-                                <span class="badge bg-primary">Requested Amount: {{ $item->amount }}</span>
+                        <div id="application-rows">
+                            <div class="application-row bg-light rounded-3 p-3 mb-4">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Select Employee <span class="text-danger">*</span></label>
+                                        <select name="emp_id[]" class="form-control emp-select" required>
+                                            <option value="">Search Employee</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Pending Loan</label>
+                                        <input type="text" class="form-control pending-loan-amount" readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Pending Gratuity</label>
+                                        <input type="text" class="form-control pending-gratuity-amount" readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Requested Amount <span class="text-danger">*</span></label>
+                                        <input type="number" name="amount[]" class="form-control" placeholder="Enter Amount" required>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end gap-2">
+                                        <button type="button" class="btn btn-success add-row"><i class="ti ti-plus"></i></button>
+                                        <button type="button" class="btn btn-danger remove-row"><i class="ti ti-trash"></i></button>
+                                    </div>
 
-                                @if ($item->status == 2)
-                                    <span class="badge bg-primary">Approved</span>
-                                @elseif ($item->status == 3)
-                                    <span class="badge bg-warning">Partial Approved</span>
-                                @endif
+                                    <div class="col-md-2">
+                                        <label class="form-label">Prayer No. <span class="text-danger">*</span></label>
+                                        <input type="text" name="prayer_no[]" class="form-control" placeholder="Prayer No" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Prayer Date</label>
+                                        <input type="date" name="prayer_date[]" class="form-control" value="{{ date('Y-m-d') }}">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="form-label">Remarks</label>
+                                        <input type="text" name="remarks[]" class="form-control" placeholder="Remarks">
+                                    </div>
 
-                                @if ($item->empName->loan_status == 1)
-                                    @php
-                                        $loanAmountSum = \App\Models\Loan::where('emp_code', $item->empName->id)->sum('loan_amount');
-                                    @endphp
-                                    <h5 class="text-primary">Total Remaining Loan Amount: {{ $loanAmountSum }}</h5>
-                                @elseif ($item->empName->loan_status == 2)
-                                    <span class="badge bg-primary">No Loan Available</span>
-                                @endif
-                            </div>
-
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control" value="{{ $item->empName->name }}" disabled>
-                            </div>
-
-                            <!-- Gratuity Amount -->
-                            <div class="col-sm-2">
-                                <input type="number" name="amount[]" class="form-control" placeholder="Enter Gratuity amount to pay" value="">
-                                <!-- Hidden input for emp_id -->
-                                <input type="hidden" name="emp_id[]" value="{{ $item->empName->id }}">
-                            </div>
-
-                            <!-- Voucher Number -->
-                            <div class="col-sm-2">
-                                <input type="text" name="voucher_number[]" class="form-control" placeholder="Voucher number" value="">
-                            </div>
-
-                            <!-- Voucher Date -->
-                            <div class="col-sm-2">
-                                <input type="date" name="voucher_date[]" class="form-control" placeholder="Voucher Date" value="">
-                            </div>
-
-                            <!-- ID Number -->
-                            <div class="col-sm-2">
-                                <input type="text" name="id_no[]" class="form-control" placeholder="ID No" value="">
-                            </div>
-
-                            <!-- Reference Number -->
-                            <div class="col-sm-2">
-                                <input type="text" name="reference[]" class="form-control" placeholder="Reference No" value="">
-                            </div>
-
-                            @if ($item->empName->loan_status == 1)
-                                @php
-                                    $loan = \App\Models\Loan::where('emp_code', $item->empName->id)->orderBy('created_at', 'desc')->get();
-                                @endphp
-
-                                @if ($loan->count())
-                                    <div class="loan-row">
-                                        <div class="row">
-                                            <div class="col-sm-4 mt-2">
-                                                <select name="loan_bank[{{ $item->empName->id }}][]" class="form-control">
-                                                    <option value="">Select Loan Bank</option>
-                                                    @foreach($loan as $loanItem)
-                                                        <option value="{{ $loanItem->id }}">
-                                                            {{ $loanItem->bank_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-3 mt-2">
-                                                <input type="number" name="loan_amount_to_pay[{{ $item->empName->id }}][]" class="form-control" placeholder="Loan amount to pay" value="">
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <!-- Add New Row Icon -->
-                                                <a href="#" class="add-row avtar avtar-s btn-link-success btn-pc-default">
-                                                    <i class="ti ti-plus f-20"></i>
-                                                </a>
-                                                <!-- Remove Row Icon -->
-                                                <a href="#" class="remove-row avtar avtar-s btn-link-danger btn-pc-default">
-                                                    <i class="ti ti-trash f-20"></i>
-                                                </a>
-                                            </div>
+                                    <div class="col-12 loan-section d-none">
+                                        <hr>
+                                        <h6>Loan Repayment</h6>
+                                        <div class="loan-rows-container">
+                                            <!-- Loan rows will be dynamically added here -->
                                         </div>
                                     </div>
-                                @endif
-                            @endif
+                                </div>
+                            </div>
                         </div>
-                        @endforeach
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">Save Application</button>
+                        </div>
                     </form>
                 </div>
-                @else
-                <div class="card-body text-center">
-                    <h5>No Data Available</h5>
-                    <a class="btn btn-primary" href="{{ route('superadmin.gratuity.request.pending') }}">Approved Gratuity Application</a>
-                </div>
-                @endif
             </div>
         </div>
-        <!-- [ form-element ] end -->
     </div>
-    <!-- [ Main Content ] end -->
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add new loan row functionality (delegated)
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.add-row')) {
-                e.preventDefault();
-                const loanRow = e.target.closest('.loan-row');
-                const newRow = loanRow.cloneNode(true); // deep clone
+    function initSelect2(element) {
+        $(element).select2({
+            ajax: {
+                url: "{{ route('superadmin.gratuity.search.employees') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return { q: params.term };
+                },
+                processResults: function (data) {
+                    return { results: data };
+                },
+                cache: true
+            },
+            placeholder: 'Search for an employee',
+            minimumInputLength: 1,
+            width: '100%'
+        }).on('select2:select', function (e) {
+            var data = e.params.data;
+            var $row = $(this).closest('.application-row');
+            
+            $.ajax({
+                url: "{{ route('superadmin.gratuity.employee.details', ':id') }}".replace(':id', data.id),
+                type: 'GET',
+                success: function(response) {
+                    $row.find('.pending-loan-amount').val(response.loan_amount);
+                    $row.find('.pending-gratuity-amount').val(response.pending_gratuity);
+                    
+                    // Fetch individual loans if any
+                    fetchEmployeeLoans(data.id, $row);
+                }
+            });
+        });
+    }
 
-                // Reset input values for the new row
-                newRow.querySelectorAll('input').forEach(input => {
-                    input.value = ''; // clear the input values
-                });
+    function fetchEmployeeLoans(empId, $row) {
+        $.ajax({
+            url: "{{ route('superadmin.gratuity.loan.index') }}", // We might need a specific endpoint for this
+            type: 'GET',
+            data: { emp_id: empId, ajax: 1 },
+            success: function(loans) {
+                const $container = $row.find('.loan-rows-container');
+                const $section = $row.find('.loan-section');
+                $container.empty();
+                
+                if (loans && loans.length > 0) {
+                    $section.removeClass('d-none');
+                    let loanHtml = `
+                        <div class="row mb-2 loan-payment-row">
+                            <div class="col-md-5">
+                                <select name="loan_bank[${empId}][]" class="form-control loan-bank-select">
+                                    <option value="">Select Loan Bank</option>
+                                    ${loans.map(l => `<option value="${l.id}" data-amount="${l.loan_amount}">${l.bank_name} (Bal: ${l.loan_amount})</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="loan_amount_to_pay[${empId}][]" class="form-control" placeholder="Amount to pay">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-sm btn-success add-loan-row"><i class="ti ti-plus"></i></button>
+                                <button type="button" class="btn btn-sm btn-danger remove-loan-row"><i class="ti ti-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                    $container.append(loanHtml);
+                } else {
+                    $section.addClass('d-none');
+                }
+            }
+        });
+    }
 
-                // Append the new row to the same container
-                loanRow.parentNode.appendChild(newRow);
+    $(document).ready(function() {
+        initSelect2('.emp-select');
+
+        $(document).on('click', '.add-row', function() {
+            const $newRow = $('.application-row:first').clone();
+            $newRow.find('input').val('');
+            $newRow.find('input[name="prayer_date[]"]').val("{{ date('Y-m-d') }}");
+            $newRow.find('.select2-container').remove();
+            $newRow.find('.emp-select').removeClass('select2-hidden-accessible').removeAttr('data-select2-id').empty().append('<option value="">Search Employee</option>');
+            $newRow.find('.loan-section').addClass('d-none');
+            $newRow.find('.loan-rows-container').empty();
+            $('#application-rows').append($newRow);
+            initSelect2($newRow.find('.emp-select'));
+        });
+
+        $(document).on('click', '.remove-row', function() {
+            if ($('.application-row').length > 1) {
+                $(this).closest('.application-row').remove();
             }
         });
 
-        // Remove loan row functionality (delegated)
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-row')) {
-                e.preventDefault();
-                const rowToRemove = e.target.closest('.loan-row');
-                rowToRemove.remove();
+        $(document).on('click', '.add-loan-row', function() {
+            const $row = $(this).closest('.loan-payment-row');
+            const $newRow = $row.clone();
+            $newRow.find('input').val('');
+            $row.after($newRow);
+        });
+
+        $(document).on('click', '.remove-loan-row', function() {
+            if ($(this).closest('.loan-rows-container').find('.loan-payment-row').length > 1) {
+                $(this).closest('.loan-payment-row').remove();
+            }
+        });
+
+        $(document).on('input', 'input[name="amount[]"]', function() {
+            const $row = $(this).closest('.application-row');
+            const pending = parseFloat($row.find('.pending-gratuity-amount').val()) || 0;
+            if (parseFloat($(this).val()) > pending) {
+                alert('Amount exceeds pending gratuity!');
+                $(this).val(pending);
             }
         });
     });

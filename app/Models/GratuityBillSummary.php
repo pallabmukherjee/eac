@@ -12,12 +12,17 @@ class GratuityBillSummary extends Model
         'bill_id',
         'bill_no',
         'emp_id',
-        'voucher_number',
-        'voucher_date',
-        'id_number',
-        'reference',
         'gratuity_amount',
-        'loan_amount'
+        'loan_amount',
+        'total_amount',
+        'remarks',
+        'prayer_no',
+        'prayer_date',
+        'voucher_no',
+        'voucher_date',
+        'id_no',
+        'reference_no',
+        'reference_date'
     ];
 
     public function empDetails() {

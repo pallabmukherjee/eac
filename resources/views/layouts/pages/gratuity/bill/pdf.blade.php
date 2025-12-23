@@ -84,9 +84,11 @@
                 <th>PPO No.</th>
                 <th>Bank A/C No.</th>
                 <th>IFSC</th>
+                <th>Prayer Details</th>
                 <th>Approved Amount</th>
                 <th>Financial Year</th>
                 <th>Ropa Year</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -100,9 +102,14 @@
                     <td>{{ $item->empDetails->ppo_number }}</td>
                     <td>{{ $item->empDetails->bank_ac_no ?? 'NA' }}</td>
                     <td>{{ $item->empDetails->ifsc ?? 'NA' }}</td>
+                    <td>
+                        No: {{ $item->prayer_no }}<br>
+                        Date: {{ $item->prayer_date }}
+                    </td>
                     <td>{{ $item->gratuity_amount }}</td>
                     <td>{{ $financialYear->year }}</td>
                     <td>{{ $gratuityRopaYear->year }}</td>
+                    <td>{{ $item->remarks }}</td>
                 </tr>
             @endforeach
         </tbody>

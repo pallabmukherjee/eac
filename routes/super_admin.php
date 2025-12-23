@@ -308,6 +308,8 @@ Route::prefix('gratuity')->name('gratuity.')->group(function () {
     Route::get('/edit/{id}', [GratuityController::class, 'edit'])->name('edit');
     Route::post('/update/{id}', [GratuityController::class, 'update'])->name('update');
     Route::delete('/delete/{id}', [GratuityController::class, 'destroy'])->name('destroy');
+    Route::get('/search-employees', [GratuityController::class, 'searchEmployees'])->name('search.employees');
+    Route::get('/get-employee-details/{id}', [GratuityController::class, 'getEmployeeDetails'])->name('employee.details');
 
     Route::prefix('/loan')->name('loan.')->group(function () {
         Route::get('/', [LoanController::class, 'index'])->name('index');
@@ -315,13 +317,6 @@ Route::prefix('gratuity')->name('gratuity.')->group(function () {
         Route::get('/loan/edit/{id}', [LoanController::class, 'edit'])->name('edit');
         Route::post('/loan/update/{empCode}', [LoanController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [LoanController::class, 'destroy'])->name('destroy');
-    });
-
-    Route::prefix('/request')->name('request.')->group(function () {
-        Route::get('/', [RequestController::class, 'index'])->name('index');
-        Route::post('/create', [RequestController::class, 'store'])->name('store');
-        Route::get('/pending', [RequestController::class, 'pending'])->name('pending');
-        Route::patch('/gratuity-requests/{id}/status', [RequestController::class, 'updateStatus'])->name('update-status');
     });
 
     Route::prefix('/financial-year')->name('financial.')->group(function () {
@@ -340,6 +335,9 @@ Route::prefix('gratuity')->name('gratuity.')->group(function () {
 
     Route::prefix('/report')->name('report.')->group(function () {
         Route::get('/', [GratuityReportController::class, 'index'])->name('index');
+        Route::get('/yearly', [GratuityReportController::class, 'yearlyPaid'])->name('yearly');
+        Route::get('/monthly', [GratuityReportController::class, 'monthlyPaid'])->name('monthly');
+        Route::get('/employee-wise', [GratuityReportController::class, 'employeeWise'])->name('employee.wise');
     });
 
     Route::prefix('/bill')->name('bill.')->group(function () {
@@ -347,6 +345,11 @@ Route::prefix('gratuity')->name('gratuity.')->group(function () {
         Route::get('/create', [GratuityBillController::class, 'create'])->name('create');
         Route::post('/create', [GratuityBillController::class, 'store'])->name('store');
         Route::get('/bill-show/{bill_id}', [GratuityBillController::class, 'show'])->name('show');
+        Route::get('/bill-edit/{bill_id}', [GratuityBillController::class, 'edit'])->name('edit');
+        Route::put('/bill-update/{bill_id}', [GratuityBillController::class, 'update'])->name('update');
         Route::get('/bill-pdf/{bill_id}', [GratuityBillController::class, 'pdf'])->name('pdf');
+        Route::delete('/bill-delete/{bill_id}', [GratuityBillController::class, 'destroy'])->name('destroy');
+        Route::get('/bill-approve/{bill_id}', [GratuityBillController::class, 'approve'])->name('approve');
+        Route::post('/bill-approve-confirm/{bill_id}', [GratuityBillController::class, 'confirmApprove'])->name('approve.confirm');
     });
 });

@@ -9,7 +9,11 @@ use App\Models\Gratuity;
 
 class LoanController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
+        if ($request->ajax()) {
+            $loans = Loan::where('emp_code', $request->emp_id)->get();
+            return response()->json($loans);
+        }
         $url = route('superadmin.gratuity.loan.store');
         $loans = Loan::with('emp')->orderBy('created_at', 'desc')->get();
         $emp = Gratuity::where('loan_status', 1)->orderBy('created_at', 'desc')->get();

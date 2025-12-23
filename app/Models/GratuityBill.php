@@ -11,5 +11,6 @@ class GratuityBill extends Model
     protected $fillable = [
         'bill_id',
         'bill_no',
+        'status',
     ];
 }

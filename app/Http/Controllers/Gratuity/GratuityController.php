@@ -138,4 +138,30 @@ class GratuityController extends Controller
 
         return redirect()->back()->with('success', 'Gratuity record deleted successfully.');
     }
+
+    public function searchEmployees(Request $request) {
+        $search = $request->input('q');
+        $employees = Gratuity::where('name', 'LIKE', "%$search%")
+            ->orWhere('employee_code', 'LIKE', "%$search%")
+            ->get(['id', 'name', 'employee_code']);
+
+        $formattedEmployees = [];
+        foreach ($employees as $employee) {
+            $formattedEmployees[] = [
+                'id' => $employee->id,
+                'text' => $employee->employee_code . ' - ' . $employee->name
+            ];
+        }
+
+        return response()->json($formattedEmployees);
+    }
+
+    public function getEmployeeDetails($id) {
+        $loanAmountSum = \App\Models\Loan::where('emp_code', $id)->sum('loan_amount');
+        $gratuity = Gratuity::find($id);
+        return response()->json([
+            'loan_amount' => $loanAmountSum,
+            'pending_gratuity' => $gratuity ? $gratuity->ppo_amount : 0
+        ]);
+    }
 }

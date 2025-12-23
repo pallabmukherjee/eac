@@ -8,22 +8,113 @@
 @section('content')
     <!-- [ Main Content ] start -->
     <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <a href="{{ route('superadmin.gratuity.list') }}" class="card-link">
+                <div class="card statistics-card-1 bg-brand-color-1">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="avtar bg-white text-primary me-3">
+                                <i class="ti ti-users f-26"></i>
+                            </div>
+                            <div>
+                                <p class="text-white mb-0">Total Employees</p>
+                                <div class="d-flex align-items-end">
+                                    <h3 class="text-white mb-0">{{ $totalEmployees }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <a href="{{ route('superadmin.gratuity.bill.index') }}" class="card-link">
+                <div class="card statistics-card-1 bg-brand-color-2">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="avtar bg-white text-success me-3">
+                                <i class="ti ti-git-pull-request f-26"></i>
+                            </div>
+                            <div>
+                                <p class="text-white mb-0">Total Applications</p>
+                                <div class="d-flex align-items-end">
+                                    <h3 class="text-white mb-0">{{ $totalApplications }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <a href="{{ route('superadmin.gratuity.bill.create') }}" class="card-link">
+                <div class="card statistics-card-1 bg-brand-color-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="avtar bg-white text-warning me-3">
+                                <i class="ti ti-plus f-26"></i>
+                            </div>
+                            <div>
+                                <p class="text-white mb-0">Create New Application</p>
+                                <div class="d-flex align-items-end">
+                                    <h3 class="text-white mb-0">New</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <div class="card statistics-card-1 bg-brand-color-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avtar bg-white text-danger me-3">
+                            <i class="ti ti-currency-dollar f-26"></i>
+                        </div>
+                        <div>
+                            <p class="text-white mb-0">Total Gratuity Paid</p>
+                            <div class="d-flex align-items-end">
+                                <h3 class="text-white mb-0">Rs. {{ number_format($totalGratuityPaid, 2) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <a href="{{ route('superadmin.gratuity.loan.index') }}" class="card-link">
+                <div class="card statistics-card-1 bg-secondary">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="avtar bg-white text-secondary me-3">
+                                <i class="ti ti-building-bank f-26"></i>
+                            </div>
+                            <div>
+                                <p class="text-white mb-0">Total Outstanding Loans</p>
+                                <div class="d-flex align-items-end">
+                                    <h3 class="text-white mb-0">Rs. {{ number_format($totalOutstandingLoans, 2) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
         <!-- [ form-element ] start -->
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h4>Gratuity Report</h4>
+                            <h4>Recent Reports</h4>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12 mb-3">
-                            {{-- <a href="{{ route('superadmin.pension.report.create') }}" class="btn btn-primary">Report Genarate</a> --}}
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered nowrap">
@@ -35,19 +126,6 @@
                                         <th>View</th>
                                     </tr>
                                 </thead>
-                                {{-- <tbody>
-                                    @foreach ($pensionerReport as $item)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('Y') }}</td>
-                                            <td>
-                                                <a href="{{ route('superadmin.pension.report.show', $item->report_id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-eye f-20"></i></a>
-                                                <a href="{{ route('superadmin.pension.report.edit', $item->report_id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-edit f-20"></i></a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody> --}}
                                 <tfoot>
                                     <tr>
                                         <th>Srl</th>
