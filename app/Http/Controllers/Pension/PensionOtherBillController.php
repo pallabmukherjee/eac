@@ -46,6 +46,10 @@ class PensionOtherBillController extends Controller {
             ]);
 
         }
+
+        $totalAmount = PensionerOtherBillSummary::where('bill_id', $reportID)->sum('amount');
+        $pensionerReport->update(['total_amount' => $totalAmount]);
+
         return redirect()->route('superadmin.pension.other.index')->with('success', 'Reports saved successfully!');
     }
 
@@ -88,6 +92,10 @@ class PensionOtherBillController extends Controller {
                 ]);
             }
         }
+        
+        $totalAmount = PensionerOtherBillSummary::where('bill_id', $report_id)->sum('amount');
+        $pensionerReport->update(['total_amount' => $totalAmount]);
+
         return redirect()->back()->with('success', 'Report updated successfully!');
     }
 

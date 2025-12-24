@@ -97,8 +97,11 @@ class PensionReportController extends Controller
                     ]);
                 }
             }
-
         }
+        
+        $totalAmount = PensionerReportSummary::where('report_id', $reportID)->sum('net_pension');
+        $pensionerReport->update(['total_amount' => $totalAmount]);
+
         return redirect()->route('superadmin.pension.report.index')->with('success', 'Reports saved successfully!');
     }
 
@@ -167,6 +170,9 @@ class PensionReportController extends Controller
                 ]);
             }
         }
+
+        $totalAmount = PensionerReportSummary::where('report_id', $report_id)->sum('net_pension');
+        $pensionerReport->update(['total_amount' => $totalAmount]);
 
         // Redirect with a success message
         return redirect()->back()->with('success', 'Report updated successfully!');

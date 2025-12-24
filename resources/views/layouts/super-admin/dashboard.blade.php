@@ -103,7 +103,7 @@
         <div class="col-sm-3">
             <div class="card statistics-card-1">
                 <div class="card-body">
-                    <a href="{{ route('superadmin.gratuity.index') }}">
+                    <a href="{{ route('superadmin.gratuity.report.index') }}">
                         <div class="d-flex align-items-center">
                             <div class="avtar bg-brand-color-4 text-white me-3">
                                 <i class="ti ti-clipboard-list f-26"></i>

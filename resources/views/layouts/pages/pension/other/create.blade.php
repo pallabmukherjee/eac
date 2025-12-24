@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Pensioner Other Report Generate')
+@section('title', 'Generate Other Bill')
 
 @section('css')
 @endsection
@@ -14,98 +14,107 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h4>Pensioner Other Bill Generate</h4>
+                            <h4>Generate Other Bill</h4>
                         </div>
                         <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
-                            <a href="{{ route('superadmin.pension.report.index') }}" class="btn btn-primary">Pensioner Report</a>
+                            <a href="{{ route('superadmin.pension.report.index') }}" class="btn btn-primary">Pension Bill</a>
                           </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="table-responsive">
-                            <form action="{{ route('superadmin.pension.other.store') }}" method="POST">
-                                @csrf
-                                <input type="text" name="details" class="form-control mb-3" placeholder="Enter Details" value="">
-                                <table class="table table-striped table-bordered nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>Srl</th>
-                                            <th>PPO Code</th>
-                                            <th>Pensioner Name</th>
-                                            <th>Type Of Pension</th>
-                                            <th>Life Certificate</th>
-                                            <th>Date of Retirement</th>
-                                            <th>Alive Status</th>
-                                            <th>5 Years Completed</th>
-                                            <th>Gross</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($pensioners as $item)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->ppo_number }}</td>
-                                                <td>{{ $item->pensioner_name }}</td>
-                                                <td>{{ $item->pension_type == 1 ? 'Self' : 'Family member' }}</td>
-                                                <td>{!! $item->life_certificate == 1 ? '<span class="text-primary">Yes</span>' : '<span class="text-danger">No</span>' !!}</td>
-                                                <td>{{ \Carbon\Carbon::parse($item->retirement_date)->format('d/m/Y') }}</td>
-                                                <td>{!! $item->alive_status == 1 ? '<span class="text-success">Alive</span>' : '<span class="text-danger">Dead</span>' !!}</td>
-                                                <td>
-                                                    @php
-                                                        $fiveYearDate = \Carbon\Carbon::parse($item->five_year_date);
-                                                        $today = \Carbon\Carbon::today();
-                                                    @endphp
-                                                    @if ($fiveYearDate->isPast())
-                                                        <span class="text-danger">{{ \Carbon\Carbon::parse($item->five_year_date)->format('d/m/Y') }}</span>
-                                                    @else
-                                                        <span class="text-primary">{{ \Carbon\Carbon::parse($item->five_year_date)->format('d/m/Y') }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                   @php
-                                                        $basic_pension = (intval($item->basic_pension) == $item->basic_pension) ? $item->basic_pension : ceil($item->basic_pension);
-                                                        $medical_allowance = (intval($item->medical_allowance) == $item->medical_allowance) ? $item->medical_allowance : ceil($item->medical_allowance);
-                                                        $other_allowance = (intval($item->other_allowance) == $item->other_allowance) ? $item->other_allowance : ceil($item->other_allowance);
-
-                                                        $gross = $basic_pension + $basic_pension * ($item->ropa->dr / 100) + $medical_allowance + $other_allowance;
-                                                        $gross_rounded = (intval($gross) == $gross) ? $gross : ceil($gross);
-                                                    @endphp
-                                                    {{ $gross_rounded }}
-                                                    <input type="hidden" name="gross[{{ $item->id }}]" value="{{ old('gross.' . $item->id, $gross_rounded) }}">
-                                                </td>
-                                                <td>
-                                                    <input class="form-control form-control-sm" type="number" name="amount[{{ $item->id }}]" placeholder="Amount" value="{{ old('amount.' . $item->id, '') }}">
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Srl</th>
-                                            <th>PPO Code</th>
-                                            <th>Pensioner Name</th>
-                                            <th>Type Of Pension</th>
-                                            <th>Life Certificate</th>
-                                            <th>Date of Retirement</th>
-                                            <th>Alive Status</th>
-                                            <th>5 Years Completed</th>
-                                            <th>Gross</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-
-                                <button type="submit" class="btn btn-primary">Save Reports</button>
-                            </form>
-
+                    <form action="{{ route('superadmin.pension.other.store') }}" method="POST">
+                        @csrf
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="details" class="form-label">Bill Details</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="ti ti-file-description"></i></span>
+                                    <input type="text" name="details" id="details" class="form-control" placeholder="Enter Description or Details for this Bill" value="" required>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="dt-responsive">
+                            <table id="create-other-bill-table" class="table table-hover table-borderless align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Pensioner Details</th>
+                                        <th>PPO Number</th>
+                                        <th>Pension Type</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-end">Gross</th>
+                                        <th style="width: 150px;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($pensioners as $item)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avtar avtar-s bg-light-primary">
+                                                        <i class="ti ti-user f-18"></i>
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-0">{{ $item->pensioner_name }}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ $item->ppo_number }}</td>
+                                            <td>{{ $item->pension_type == 1 ? 'Self' : 'Family' }}</td>
+                                            <td class="text-center">
+                                                {!! $item->alive_status == 1 ? '<span class="badge bg-light-success text-success">Alive</span>' : '<span class="badge bg-light-danger text-danger">Dead</span>' !!}
+                                            </td>
+                                            <td class="text-end">
+                                                @php
+                                                    $basic_pension = (intval($item->basic_pension) == $item->basic_pension) ? $item->basic_pension : ceil($item->basic_pension);
+                                                    $medical_allowance = (intval($item->medical_allowance) == $item->medical_allowance) ? $item->medical_allowance : ceil($item->medical_allowance);
+                                                    $other_allowance = (intval($item->other_allowance) == $item->other_allowance) ? $item->other_allowance : ceil($item->other_allowance);
+
+                                                    $gross = $basic_pension + $basic_pension * ($item->ropa->dr / 100) + $medical_allowance + $other_allowance;
+                                                    $gross_rounded = (intval($gross) == $gross) ? $gross : ceil($gross);
+                                                @endphp
+                                                <span class="fw-bold">{{ $gross_rounded }}</span>
+                                                <input type="hidden" name="gross[{{ $item->id }}]" value="{{ old('gross.' . $item->id, $gross_rounded) }}">
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm">
+                                                    <span class="input-group-text">Rs.</span>
+                                                    <input class="form-control" type="number" name="amount[{{ $item->id }}]" placeholder="0.00" value="{{ old('amount.' . $item->id, '') }}">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-sm-12 text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ti ti-device-floppy me-1"></i> Save Bill
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
         <!-- [ form-element ] end -->
     </div>
     <!-- [ Main Content ] end -->
+@endsection
+
+@section('scripts')
+<script src="{{ URL::asset('assets/js/plugins/dataTables.min.js') }}"></script>
+<script src="{{ URL::asset('assets/js/plugins/dataTables.bootstrap5.min.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#create-other-bill-table').DataTable({
+            "paging": false,
+            "info": false,
+            "ordering": false,
+            "searching": true
+        });
+    });
+</script>
 @endsection

@@ -18,11 +18,16 @@ class GratuityReportController extends Controller
         $totalGratuityPaid = GratuityBillSummary::sum('gratuity_amount');
         $totalOutstandingLoans = Loan::sum('loan_amount');
 
+        $lastPending = GratuityBill::where('status', 1)->orderBy('created_at', 'desc')->take(5)->get();
+        $lastAccepted = GratuityBill::where('status', 2)->orderBy('created_at', 'desc')->take(5)->get();
+
         return view("layouts.pages.gratuity.report.index", compact(
             'totalEmployees',
             'totalApplications',
             'totalGratuityPaid',
-            'totalOutstandingLoans'
+            'totalOutstandingLoans',
+            'lastPending',
+            'lastAccepted'
         ));
     }
 

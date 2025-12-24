@@ -11,5 +11,6 @@ class PensionerOtherBill extends Model
     protected $fillable = [
         'bill_id',
         'details',
+        'total_amount',
     ];
 }

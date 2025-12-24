@@ -7,141 +7,110 @@
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card text-white" style="background-image: linear-gradient(to right, #007bff, #00bfff);">
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export') }}" class="text-white">Total Active Pensioners</a></h5>
-                    <p class="card-text fs-4">{{ $totalPensioners }}</p>
+<!-- [ Main Content ] start -->
+<div class="row">
+  <!-- [ form-element ] start -->
+  <div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-sm-6">
+                    <h4>Pensioner Data</h4>
+                </div>
+                <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
+                    <a href="{{ route('superadmin.pension.create') }}" class="btn btn-primary me-2">
+                        <i class="ti ti-plus me-1"></i> Add New
+                    </a>
+                    <a href="{{ route('superadmin.pension.exportPdf') }}" class="btn btn-secondary" target="_blank">
+                        <i class="ti ti-file-download me-1"></i> Download PDF
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white" style="background-image: linear-gradient(to right, #dc3545, #fd7e14);">
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export', ['type' => 'dead']) }}" class="text-white">Total Dead</a></h5>
-                    <p class="card-text fs-4">{{ $totalDead }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white" style="background-image: linear-gradient(to right, #28a745, #20c997);">
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export', ['type' => '5years']) }}" class="text-white">Total 5 Years Completed</a></h5>
-                    <p class="card-text fs-4">{{ $total5YearsCompleted }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white" style="background-image: linear-gradient(to right, #ffc107, #ffcd39);">
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export', ['type' => '80years']) }}" class="text-white">Total 80 Years Completed</a></h5>
-                    <p class="card-text fs-4">{{ $total80YearsCompleted }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white" style="background-image: linear-gradient(to right, #6f42c1, #a750ff);">
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{{ route('superadmin.pension.report.index') }}" class="text-white">Total Reports Generated</a></h5>
-                    <p class="card-text fs-4">{{ $totalReportsGenerated }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white" style="background-image: linear-gradient(to right, #17a2b8, #20c997);">
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{{ route('superadmin.pension.export', ['type' => 'life_cert_yes']) }}" class="text-white">Total Life Certificate Yes</a></h5>
-                    <p class="card-text fs-4">{{ $totalLifeCertificateYes }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                            <h4 class="mb-0">Pensioner Data</h4>
-                                            <div>
-
-                                                <a href="{{ route('superadmin.pension.exportPdf') }}" class="btn btn-secondary" target="_blank">Download PDF</a>
-                                            </div>
-                                        </div>                </div>
-                <div class="card-body">
-                    <div class="dt-responsive table-responsive">
-                        <table id="pensioner-data" class="table table-striped table-bordered table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Sl. No.</th>
-                                    <th>PPO Code</th>
-                                    <th>Pensioner Name</th>
-                                    <th>Type Of Pension</th>
-                                    <th>Life Certificate</th>
-                                    <th>Date of Retirement</th>
-                                    <th>Alive Status</th>
-                                    <th>5 Years Completed</th>
-                                    <th>80 Years Completed</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($pensioners as $item)
-                                <tr>
-                                    <td>{{ $item->id }}</td>
-                                    <td>{{ $item->ppo_number }}</td>
-                                    <td>{{ $item->pensioner_name }}</td>
-                                    <td>{{ $item->pension_type == 1 ? 'Self' : 'Family member' }}</td>
-                                    <td>
-                                        <div class="form-check form-switch custom-switch-v1 mb-2">
-                                            <input type="checkbox" class="form-check-input input-primary"
-                                                   id="customswitchv2-{{ $item->id }}"
-                                                   {{ $item->life_certificate == 1 ? 'checked' : '' }}
-                                                   data-id="{{ $item->id }}">
-                                            <label class="form-check-label" for="customswitchv2-{{ $item->id }}">
-                                                {!! $item->life_certificate == 1 ? '<span class="text-primary">Yes</span>' : '<span class="text-danger">No</span>' !!}
-                                            </label>
+        <div class="card-body">
+            <div class="dt-responsive">
+                <table id="pensioner-data" class="table table-hover table-borderless align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3">#</th>
+                            <th class="py-3">Pensioner Details</th>
+                            <th class="py-3">Type</th>
+                            <th class="py-3">Life Cert.</th>
+                            <th class="py-3">Retirement</th>
+                            <th class="py-3">Alive Status</th>
+                            <th class="py-3">5 Years</th>
+                            <th class="py-3">80 Years</th>
+                            <th class="py-3 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($pensioners as $item)
+                        <tr>
+                            <td><span class="text-muted">{{ $item->id }}</span></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="avtar avtar-s bg-light-primary">
+                                            <i class="ti ti-user f-18"></i>
                                         </div>
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($item->retirement_date)->format('d/m/Y') }}</td>
-                                    <td>{!! $item->alive_status == 1 ? '<span class="text-success">Alive</span>' : '<span class="text-danger">Dead</span>' !!}</td>
-                                    <td>
-                                        @php
-                                            $fiveYearDate = \Carbon\Carbon::parse($item->five_year_date);
-                                            $today = \Carbon\Carbon::today();
-                                        @endphp
-                                        @if($fiveYearDate->isPast())
-                                            <span class="text-danger">{{ \Carbon\Carbon::parse($item->five_year_date)->format('d/m/Y') }}</span>
-                                        @else
-                                            <span class="text-primary">{{ \Carbon\Carbon::parse($item->five_year_date)->format('d/m/Y') }}</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($item->dob)
-                                            @php
-                                                $eightyYearDate = \Carbon\Carbon::parse($item->dob)->addYears(80);
-                                            @endphp
-                                            @if($eightyYearDate->isPast())
-                                                <span class="text-danger">{{ $eightyYearDate->format('d/m/Y') }}</span>
-                                            @else
-                                                {{ $eightyYearDate->format('d/m/Y') }}
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('superadmin.pension.edit', $item->id) }}" class="avtar avtar-xs btn-link-secondary"><i class="ti ti-edit f-20"></i></a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-
-                        </table>
-                    </div>
-                </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-0">{{ $item->pensioner_name }}</h6>
+                                        <small class="text-muted">PPO: {{ $item->ppo_number }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $item->pension_type == 1 ? 'Self' : 'Family member' }}</td>
+                            <td>
+                                <div class="form-check form-switch custom-switch-v1">
+                                    <input type="checkbox" class="form-check-input input-primary"
+                                           id="customswitchv2-{{ $item->id }}"
+                                           {{ $item->life_certificate == 1 ? 'checked' : '' }}
+                                           data-id="{{ $item->id }}">
+                                    <label class="form-check-label" for="customswitchv2-{{ $item->id }}">
+                                        {!! $item->life_certificate == 1 ? '<span class="text-primary">Yes</span>' : '<span class="text-danger">No</span>' !!}
+                                    </label>
+                                </div>
+                            </td>
+                            <td>{{ \Carbon\Carbon::parse($item->retirement_date)->format('d M, Y') }}</td>
+                            <td>{!! $item->alive_status == 1 ? '<span class="badge bg-light-success text-success">Alive</span>' : '<span class="badge bg-light-danger text-danger">Dead</span>' !!}</td>
+                            <td>
+                                @php
+                                    $fiveYearDate = \Carbon\Carbon::parse($item->five_year_date);
+                                @endphp
+                                @if($fiveYearDate->isPast())
+                                    <span class="text-danger">{{ $fiveYearDate->format('d/m/Y') }}</span>
+                                @else
+                                    <span class="text-primary">{{ $fiveYearDate->format('d/m/Y') }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($item->dob)
+                                    @php
+                                        $eightyYearDate = \Carbon\Carbon::parse($item->dob)->addYears(80);
+                                    @endphp
+                                    @if($eightyYearDate->isPast())
+                                        <span class="text-danger">{{ $eightyYearDate->format('d/m/Y') }}</span>
+                                    @else
+                                        {{ $eightyYearDate->format('d/m/Y') }}
+                                    @endif
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('superadmin.pension.edit', $item->id) }}" class="btn btn-icon btn-link-primary avtar-xs" data-bs-toggle="tooltip" title="Edit">
+                                    <i class="ti ti-edit f-20"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
+  </div>
+</div>
+<!-- [ Main Content ] end -->
 @endsection
 
 @section('scripts')
@@ -149,13 +118,21 @@
     <script src="{{ URL::asset('assets/js/plugins/dataTables.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/plugins/dataTables.bootstrap5.min.js') }}"></script>
     <script>
-        var total, pageTotal;
         var table = $('#pensioner-data').DataTable({
-            "order": [['id']]  // Change 'desc' to 'asc' for ascending order
+            "order": [['id', 'asc']],
+            "columnDefs": [
+                {
+                    "targets": 1,
+                    "createdCell": function (td) {
+                        $(td).css({
+                            'white-space': 'normal',
+                            'word-break': 'break-word'
+                        });
+                    }
+                }
+            ]
         });
-    </script>
 
-    <script>
         $(document).ready(function() {
             // On change of the switch
             $(document).on('change', '#pensioner-data input[type="checkbox"].form-check-input', function() {

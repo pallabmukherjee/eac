@@ -102,22 +102,8 @@ class PensionController extends Controller
 
     public function index() {
         $pensioners = Pensioner::orderBy('id', 'asc')->get();
-        $totalPensioners = Pensioner::where('no_claimant', 0)->count();
-        $totalDead = Pensioner::where('alive_status', 2)->count();
-        $total5YearsCompleted = Pensioner::where('five_year_date', '<', now())->count();
-        $total80YearsCompleted = Pensioner::where('dob', '<', now()->subYears(80))->count();
-        $totalReportsGenerated = PensionerReport::count();
-        $totalLifeCertificateYes = Pensioner::where('life_certificate', 1)->count();
 
-        return view("layouts.pages.pension.list", compact(
-            'pensioners',
-            'totalPensioners',
-            'totalDead',
-            'total5YearsCompleted',
-            'total80YearsCompleted',
-            'totalReportsGenerated',
-            'totalLifeCertificateYes'
-        ));
+        return view("layouts.pages.pension.list", compact('pensioners'));
     }
 
     public function edit($id) {

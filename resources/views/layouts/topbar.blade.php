@@ -18,6 +18,17 @@
             </ul>
         </div>
         <!-- [Mobile Media Block end] -->
+        <div class="ms-auto me-auto d-flex align-items-center">
+            @php
+                $websiteSetting = \App\Models\WebsiteSetting::first();
+            @endphp
+            @if ($websiteSetting && $websiteSetting->logo)
+                <img src="{{ asset('storage/' . $websiteSetting->logo) }}" height="40" class="me-2" alt="Logo">
+            @else
+                <img src="{{ asset('assets/images/logo-dark.png') }}" height="40" class="me-2" alt="Logo">
+            @endif
+            <h4 class="mb-0 fw-bold d-none d-md-block">{{ $websiteSetting ? ($websiteSetting->organization ?? 'E-Accounting') : 'E-Accounting' }}</h4>
+        </div>
         <div class="ms-auto">
             <ul class="list-unstyled">
                 <li class="dropdown pc-h-item">

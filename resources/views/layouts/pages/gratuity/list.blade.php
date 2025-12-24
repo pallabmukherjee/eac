@@ -17,7 +17,15 @@
                     <h4>Gratuity Data</h4>
                 </div>
                 <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
-                    <a href="{{ route('superadmin.gratuity.index') }}" class="btn btn-primary">Add New Data</a>
+                    <a href="{{ route('superadmin.gratuity.add') }}" class="btn btn-primary me-1">
+                        <i class="ti ti-plus me-1"></i> Add New Data
+                    </a>
+                    <a href="{{ route('superadmin.gratuity.export') }}" class="btn btn-success me-1">
+                        <i class="ti ti-file-type-csv me-1"></i> Excel
+                    </a>
+                    <a href="{{ route('superadmin.gratuity.exportPdf') }}" class="btn btn-secondary" target="_blank">
+                        <i class="ti ti-file-type-pdf me-1"></i> PDF
+                    </a>
                 </div>
             </div>
         </div>

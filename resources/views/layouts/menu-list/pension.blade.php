@@ -2,7 +2,7 @@
     <label>Navigation</label>
 </li>
 <li class="pc-item">
-    <a href="{{ route('dashboard') }}" class="pc-link">
+    <a href="{{ route('superadmin.pension.dashboard') }}" class="pc-link">
         <span class="pc-micon">
         <i class="ph-duotone ph-gauge"></i>
         </span>
@@ -10,14 +10,6 @@
     </a>
 </li>
 
-<li class="pc-item">
-    <a href="{{ route('superadmin.pension.create') }}" class="pc-link">
-        <span class="pc-micon">
-        <i class="ti ti-user-plus"></i>
-        </span>
-        <span class="pc-mtext">Create Pension</span>
-    </a>
-</li>
 <li class="pc-item">
     <a href="{{ route('superadmin.pension.index') }}" class="pc-link">
         <span class="pc-micon">
@@ -31,7 +23,7 @@
         <span class="pc-micon">
         <i class="ti ti-report-analytics"></i>
         </span>
-        <span class="pc-mtext">Pensioner Report</span>
+        <span class="pc-mtext">Pension Bill</span>
     </a>
 </li>
 <li class="pc-item">

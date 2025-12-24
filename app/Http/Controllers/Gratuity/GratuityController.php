@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\GratuityRopaYear;
 use App\Models\Gratuity;
 use App\Models\FinancialYear;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GratuityController extends Controller
 {
-    public function index() {
+    public function add() {
         $url = route('superadmin.gratuity.store');
         $ropaYears = GratuityRopaYear::orderBy('created_at', 'desc')->get();
         $financialYears = FinancialYear::orderBy('created_at', 'desc')->get();
@@ -163,5 +164,52 @@ class GratuityController extends Controller
             'loan_amount' => $loanAmountSum,
             'pending_gratuity' => $gratuity ? $gratuity->ppo_amount : 0
         ]);
+    }
+
+    public function export()
+    {
+        $fileName = "gratuity_data.csv";
+        $gratuities = Gratuity::orderBy('id', 'asc')->get();
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('Sl. No.', 'Employee Code', 'Name', 'Relation Name', 'PPO Number', 'PPO Amount', 'Sanctioned Amount', 'Retirement Date', 'PPO Receive Date');
+
+        $callback = function() use($gratuities, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($gratuities as $index => $item) {
+                fputcsv($file, array(
+                    $index + 1,
+                    $item->employee_code,
+                    $item->name,
+                    $item->relation_name,
+                    $item->ppo_number,
+                    $item->ppo_amount,
+                    $item->sanctioned_amount,
+                    \Carbon\Carbon::parse($item->retirement_date)->format('d/m/Y'),
+                    \Carbon\Carbon::parse($item->ppo_receive_date)->format('d/m/Y')
+                ));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportPdf()
+    {
+        $gratuities = Gratuity::orderBy('id', 'asc')->get();
+        $pdf = Pdf::loadView('layouts.pages.gratuity.pdf', compact('gratuities'))
+                  ->setPaper('legal', 'landscape');
+        return $pdf->stream('gratuity_data.pdf');
     }
 }

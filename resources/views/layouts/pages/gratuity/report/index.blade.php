@@ -104,43 +104,123 @@
     </div>
 
     <div class="row">
-        <!-- [ form-element ] start -->
-        <div class="col-lg-12">
+        <!-- [ Pending Applications ] start -->
+        <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <h4>Recent Reports</h4>
-                        </div>
-                    </div>
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5>Latest Pending Applications</h5>
+                    <a href="{{ route('superadmin.gratuity.bill.index') }}" class="btn btn-sm btn-link-primary">Show More</a>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>Srl</th>
-                                        <th>Month</th>
-                                        <th>Year</th>
-                                        <th>View</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>Srl</th>
-                                        <th>Month</th>
-                                        <th>Year</th>
-                                        <th>View</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Bill Details</th>
+                                    <th>Date</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($lastPending as $bill)
+                                @php
+                                    $amount = \App\Models\GratuityBillSummary::where('bill_id', $bill->bill_id)
+                                        ->selectRaw('SUM(COALESCE(gratuity_amount, 0) + COALESCE(loan_amount, 0)) as total')
+                                        ->first()->total;
+                                @endphp
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="avtar avtar-s bg-light-warning">
+                                                    <i class="ti ti-file-text f-18"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">{{ $bill->bill_no }}</h6>
+                                                <small class="text-muted">ID: {{ $bill->bill_id }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold">{{ \Carbon\Carbon::parse($bill->created_at)->format('d M, Y') }}</span>
+                                            <small class="text-muted">{{ \Carbon\Carbon::parse($bill->created_at)->format('h:i A') }}</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="badge bg-light-primary text-primary f-14">Rs. {{ number_format($amount, 2) }}</span>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="3" class="text-center py-3">No pending applications</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- [ form-element ] end -->
+        <!-- [ Accepted Applications ] start -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5>Latest Accepted Applications</h5>
+                    <a href="{{ route('superadmin.gratuity.bill.index', ['status' => 'approved']) }}" class="btn btn-sm btn-link-success">Show More</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Bill Details</th>
+                                    <th>Date</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($lastAccepted as $bill)
+                                @php
+                                    $amount = \App\Models\GratuityBillSummary::where('bill_id', $bill->bill_id)
+                                        ->selectRaw('SUM(COALESCE(gratuity_amount, 0) + COALESCE(loan_amount, 0)) as total')
+                                        ->first()->total;
+                                @endphp
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="avtar avtar-s bg-light-success">
+                                                    <i class="ti ti-check f-18"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">{{ $bill->bill_no }}</h6>
+                                                <small class="text-muted">ID: {{ $bill->bill_id }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold">{{ \Carbon\Carbon::parse($bill->created_at)->format('d M, Y') }}</span>
+                                            <small class="text-muted">{{ \Carbon\Carbon::parse($bill->created_at)->format('h:i A') }}</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="badge bg-light-primary text-primary f-14">Rs. {{ number_format($amount, 2) }}</span>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="3" class="text-center py-3">No accepted applications</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- [ Main Content ] end -->
 @endsection

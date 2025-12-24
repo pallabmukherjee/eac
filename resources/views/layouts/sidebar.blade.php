@@ -19,6 +19,21 @@
                         ">
                             Gratuity
                         </h1>
+                    @elseif (Str::is('superadmin.pension.*', Route::currentRouteName()))
+                        <h1 class="fw-bold mt-2" style="
+                            font-size: 2.2rem;
+                            background: linear-gradient(to right, #ff0000, #a020f0, #0000ff);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            display: inline-block;
+                            position: relative;
+                            z-index: 1;
+                            letter-spacing: 1px;
+                            white-space: nowrap;
+                            filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.6));
+                        ">
+                            Pension
+                        </h1>
                     @else
                         <div class="rounded p-3" style="background-color: #f0f8ff;">
                             <!-- ========   Change your logo from here   ============ -->
@@ -31,7 +46,7 @@
                                 <img src="{{ asset('assets/images/logo-dark.png') }}" class="logo-lg">
                             @endif
                             <h3 class="fw-bold mt-2" style="color: #003366;">
-                                {{ $websiteSetting ? ($websiteSetting->name ?? '') : 'E-Accounting' }}
+                                {{ $websiteSetting ? ($websiteSetting->organization ?? '') : 'E-Accounting' }}
                             </h3>
                         </div>
                     @endif

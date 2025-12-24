@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Pensioner Report Generate')
+@section('title', 'Update Pension Bill')
 
 @section('css')
     <link rel="stylesheet" href="{{ URL::asset('assets/css/plugins/flatpickr.min.css') }}">
@@ -15,103 +15,93 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h4>Pensioner Report Update</h4>
+                            <h4>Update Pension Bill</h4>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="table-responsive">
-                            <form action="{{ route('superadmin.pension.report.update', $report->report_id) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <div class="d-flex align-items-center mb-3">
-                                    <h5 class="me-3 mb-0">Month and Year</h5>
-                                    <div style="width: 200px;">
-                                        @php
-                                            $defaultYear = $report ? $report->year : date('Y');
-                                            $defaultMonth = $report ? $report->month : date('n');
-                                            $defaultDate = \Carbon\Carbon::createFromDate($defaultYear, $defaultMonth, 1);
-                                        @endphp
-                                        <input type="text" class="form-control" id="month_year" name="month_year" value="{{ $defaultDate->format('F Y') }}" required>
-                                        <input type="hidden" id="month" name="month" value="{{ $defaultMonth }}">
-                                        <input type="hidden" id="year" name="year" value="{{ $defaultYear }}">
-                                    </div>
+                    <form action="{{ route('superadmin.pension.report.update', $report->report_id) }}" method="POST">
+                        @csrf
+                        @method('POST')
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label for="month_year" class="form-label">Month and Year</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="ti ti-calendar"></i></span>
+                                    @php
+                                        $defaultYear = $report ? $report->year : date('Y');
+                                        $defaultMonth = $report ? $report->month : date('n');
+                                        $defaultDate = \Carbon\Carbon::createFromDate($defaultYear, $defaultMonth, 1);
+                                    @endphp
+                                    <input type="text" class="form-control" id="month_year" name="month_year" value="{{ $defaultDate->format('F Y') }}" required>
                                 </div>
-                                <table class="table table-striped table-bordered nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>PPO Code</th>
-                                            <th>Pensioner Name</th>
-                                            <th>Type Of Pension</th>
-                                            <th>Life Certificate</th>
-                                            <th>Date of Retirement</th>
-                                            <th>Alive Status</th>
-                                            <th>5 Years Completed</th>
-                                            <th>Gross</th>
-                                            <th>Arrear</th>
-                                            <th>Overdrawn</th>
-                                            <th>Net Pension</th>
-                                            <th>Remarks</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($pensionersReport as $item)
-                                            <tr>
-                                                <td>{{ $item->pensionerDetails->ppo_number }}</td>
-                                                <td>{{ $item->pensionerDetails->pensioner_name }}</td>
-                                                <td>{{ $item->pensionerDetails->pension_type == 1 ? 'Self' : 'Family member' }}</td>
-                                                <td>{!! $item->pensionerDetails->life_certificate == 1 ? '<span class="text-primary">Yes</span>' : '<span class="text-danger">No</span>' !!}</td>
-                                                <td>{{ \Carbon\Carbon::parse($item->pensionerDetails->retirement_date)->format('d/m/Y') }}</td>
-                                                <td>{!! $item->pensionerDetails->alive_status == 1 ? '<span class="text-success">Alive</span>' : '<span class="text-danger">Dead</span>' !!}</td>
-                                                <td>
-                                                    @php
-                                                        $fiveYearDate = \Carbon\Carbon::parse($item->pensionerDetails->five_year_date);
-                                                        $today = \Carbon\Carbon::today();
-                                                    @endphp
-                                                    @if ($fiveYearDate->isPast())
-                                                        <span class="text-danger">{{ $fiveYearDate->format('d/m/Y') }}</span>
-                                                    @else
-                                                        <span class="text-primary">{{ $fiveYearDate->format('d/m/Y') }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $item->gross }}</td>
-                                                <td>
-                                                    <input class="form-control form-control-sm no-negative" type="number" name="arrear[{{ $item->id }}]" placeholder="Arrear" value="{{ old('arrear.' . $item->id, $item->arrear ?? '') }}">
-                                                </td>
-                                                <td>
-                                                    <input class="form-control form-control-sm no-negative" type="number" name="overdrawn[{{ $item->id }}]" placeholder="Overdrawn" value="{{ old('overdrawn.' . $item->id, $item->overdrawn ?? '') }}">
-                                                </td>
-                                                <td>{{ $item->net_pension }}</td>
-                                                <td>
-                                                    <input class="form-control form-control-sm" type="text" name="remarks[{{ $item->id }}]" placeholder="Remarks" value="{{ old('remarks.' . $item->id, $item->remarks ?? '') }}">
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>PPO Code</th>
-                                            <th>Pensioner Name</th>
-                                            <th>Type Of Pension</th>
-                                            <th>Life Certificate</th>
-                                            <th>Date of Retirement</th>
-                                            <th>Alive Status</th>
-                                            <th>5 Years Completed</th>
-                                            <th>Gross</th>
-                                            <th>Arrear</th>
-                                            <th>Overdrawn</th>
-                                            <th>Net Pension</th>
-                                            <th>Remarks</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-
-                                <button type="submit" class="btn btn-primary">Save Reports</button>
-                            </form>
-
+                                <input type="hidden" id="month" name="month" value="{{ $defaultMonth }}">
+                                <input type="hidden" id="year" name="year" value="{{ $defaultYear }}">
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="dt-responsive">
+                            <table id="edit-report-table" class="table table-hover table-borderless align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Pensioner Details</th>
+                                        <th>PPO Number</th>
+                                        <th class="text-center">Life Cert.</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-end">Gross</th>
+                                        <th style="width: 120px;">Arrear</th>
+                                        <th style="width: 120px;">Overdrawn</th>
+                                        <th class="text-end">Net Pension</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($pensionersReport as $item)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avtar avtar-s bg-light-primary">
+                                                        <i class="ti ti-user f-18"></i>
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-0">{{ $item->pensionerDetails->pensioner_name }}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ $item->pensionerDetails->ppo_number }}</td>
+                                            <td class="text-center">
+                                                {!! $item->pensionerDetails->life_certificate == 1 ? '<span class="badge bg-light-success text-success">Yes</span>' : '<span class="badge bg-light-danger text-danger">No</span>' !!}
+                                            </td>
+                                            <td class="text-center">
+                                                {!! $item->pensionerDetails->alive_status == 1 ? '<span class="badge bg-light-success text-success">Alive</span>' : '<span class="badge bg-light-danger text-danger">Dead</span>' !!}
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="fw-bold">{{ $item->gross }}</span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control form-control-sm no-negative" type="number" name="arrear[{{ $item->id }}]" placeholder="0.00" value="{{ old('arrear.' . $item->id, $item->arrear ?? '') }}">
+                                            </td>
+                                            <td>
+                                                <input class="form-control form-control-sm no-negative" type="number" name="overdrawn[{{ $item->id }}]" placeholder="0.00" value="{{ old('overdrawn.' . $item->id, $item->overdrawn ?? '') }}">
+                                            </td>
+                                            <td class="text-end fw-bold text-primary">{{ $item->net_pension }}</td>
+                                            <td>
+                                                <input class="form-control form-control-sm" type="text" name="remarks[{{ $item->id }}]" placeholder="Remarks" value="{{ old('remarks.' . $item->id, $item->remarks ?? '') }}">
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-sm-12 text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ti ti-device-floppy me-1"></i> Update Bill
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -122,6 +112,8 @@
 
 @section('scripts')
 <script src="{{ URL::asset('assets/js/plugins/flatpickr.min.js') }}"></script>
+<script src="{{ URL::asset('assets/js/plugins/dataTables.min.js') }}"></script>
+<script src="{{ URL::asset('assets/js/plugins/dataTables.bootstrap5.min.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         flatpickr("#month_year", {
@@ -141,14 +133,20 @@
                 }
             }
         });
-    });
 
-    document.querySelectorAll('.no-negative').forEach(function(input) {
-        input.addEventListener('input', function (e) {
-            // Prevent negative sign entry by replacing it
-            this.value = this.value.replace('-', '');
+        document.querySelectorAll('.no-negative').forEach(function(input) {
+            input.addEventListener('input', function (e) {
+                // Prevent negative sign entry by replacing it
+                this.value = this.value.replace('-', '');
+            });
+        });
+
+        $('#edit-report-table').DataTable({
+            "paging": false,
+            "info": false,
+            "ordering": false,
+            "searching": true
         });
     });
 </script>
-
 @endsection

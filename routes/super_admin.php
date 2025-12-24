@@ -33,6 +33,7 @@ use App\Http\Controllers\Account\Report\PaymentSummaryAccountHeadController;
 use App\Http\Controllers\Account\Report\PaymentSummaryBenificiaryController;
 use App\Http\Controllers\Account\Report\ReceiptSummaryController;
 use App\Http\Controllers\Account\Report\ReportSettingsController;
+use App\Http\Controllers\Pension\PensionDashboardController;
 use App\Http\Controllers\Pension\PensionController;
 use App\Http\Controllers\Pension\RopaYearController;
 use App\Http\Controllers\Pension\PensionReportController;
@@ -246,6 +247,7 @@ Route::prefix('account')->name('account.')->group(function () {
 });
 
 Route::prefix('pension')->name('pension.')->group(function () {
+    Route::get('/dashboard', [PensionDashboardController::class, 'index'])->name('dashboard');
     Route::get('/', [PensionController::class, 'index'])->name('index');
     Route::get('/create', [PensionController::class, 'create'])->name('create');
     Route::post('/create', [PensionController::class, 'store'])->name('store');
@@ -302,9 +304,12 @@ Route::prefix('pension')->name('pension.')->group(function () {
 
 
 Route::prefix('gratuity')->name('gratuity.')->group(function () {
-    Route::get('/', [GratuityController::class, 'index'])->name('index');
+    Route::get('/', [GratuityReportController::class, 'index'])->name('index');
+    Route::get('/add', [GratuityController::class, 'add'])->name('add');
     Route::post('/create', [GratuityController::class, 'store'])->name('store');
     Route::get('/list', [GratuityController::class, 'list'])->name('list');
+    Route::get('/export', [GratuityController::class, 'export'])->name('export');
+    Route::get('/export-pdf', [GratuityController::class, 'exportPdf'])->name('exportPdf');
     Route::get('/edit/{id}', [GratuityController::class, 'edit'])->name('edit');
     Route::post('/update/{id}', [GratuityController::class, 'update'])->name('update');
     Route::delete('/delete/{id}', [GratuityController::class, 'destroy'])->name('destroy');

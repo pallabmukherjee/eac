@@ -11,7 +11,8 @@ class PensionerReport extends Model
     protected $fillable = [
         'report_id',
         'month',
-        'year'
+        'year',
+        'total_amount'
     ];
 
 }
