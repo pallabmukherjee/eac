@@ -20,7 +20,7 @@
 </li>
 
 <li class="pc-item">
-    <a href="{{ route('superadmin.leave.employee.index') }}" class="pc-link">
+    <a href="{{ route('superadmin.leave.dashboard') }}" class="pc-link">
         <span class="pc-micon">
         <i class="ph-duotone ph-airplane-tilt"></i>
         </span>

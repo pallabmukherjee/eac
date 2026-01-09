@@ -74,17 +74,19 @@
     <table>
         <thead>
             <tr>
-                <th colspan="7">
+                <th colspan="10">
                     <h1>{{ $website->organization }}</h1>
-                    <h1>Gratuity Report: {{ $report->bill_no }}</h1>
+                    <h1>Bill for Gratuity payment  {{$report->bill_no}}</h1>
                 </th>
             </tr>
             <tr>
+                <th>Prayer Details</th>
+                <th>Voucher Details</th>
+                <th>Relation name(Spouse Name)</th>
                 <th>Name</th>
                 <th>PPO No.</th>
                 <th>Bank A/C No.</th>
                 <th>IFSC</th>
-                <th>Prayer Details</th>
                 <th>Approved Amount</th>
                 <th>Financial Year</th>
                 <th>Ropa Year</th>
@@ -93,22 +95,23 @@
         </thead>
         <tbody>
             @foreach($gratuityBills as $item)
-                @php
-                    $gratuityRopaYear = App\Models\GratuityRopaYear::where('id', $item->empDetails->ropa_year)->first();
-                    $financialYear = App\Models\FinancialYear::where('id', $item->empDetails->financial_year)->first();
-                @endphp
                 <tr>
+                    <td>
+                        No: {{ $item->prayer_no ?? 'NA' }}<br>
+                        Date: {{ $item->prayer_date ?? 'NA' }}
+                    </td>
+                    <td>
+                        No: {{ $item->voucher_no ?? 'NA' }}<br>
+                        Date: {{ $item->voucher_date ?? 'NA' }}
+                    </td>
+                    <td>{{ $item->empDetails->relation_name ?? 'NA' }}</td>
                     <td>{{ $item->empDetails->name }}</td>
-                    <td>{{ $item->empDetails->ppo_number }}</td>
+                    <td>{{ $item->empDetails->ppo_number ?? 'NA' }}</td>
                     <td>{{ $item->empDetails->bank_ac_no ?? 'NA' }}</td>
                     <td>{{ $item->empDetails->ifsc ?? 'NA' }}</td>
-                    <td>
-                        No: {{ $item->prayer_no }}<br>
-                        Date: {{ $item->prayer_date }}
-                    </td>
                     <td>{{ $item->gratuity_amount }}</td>
-                    <td>{{ $financialYear->year }}</td>
-                    <td>{{ $gratuityRopaYear->year }}</td>
+                    <td>{{ $item->empDetails->financialYear->year ?? '' }}</td>
+                    <td>{{ $item->empDetails->ropaYear->year ?? '' }}</td>
                     <td>{{ $item->remarks }}</td>
                 </tr>
             @endforeach
@@ -119,7 +122,7 @@
     <table>
         <tbody>
             <tr class="no-border">
-                <td class="text-center">Dealink Assistant<br>{{ $website->organization }}</td>
+                <td class="text-center">Dealing Assistant<br>{{ $website->organization }}</td>
                 <td width="200px"></td>
                 <td width="200px"></td>
                 <td class="text-center">In-Charge<br>{{ $website->organization }}</td>

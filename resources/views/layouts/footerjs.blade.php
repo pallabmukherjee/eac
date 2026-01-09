@@ -6,6 +6,7 @@
 <script src="{{ URL::asset('assets/js/pcoded.js') }}"></script>
 <script src="{{ URL::asset('assets/js/plugins/feather.min.js') }}"></script>
 <script src="{{ URL::asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@2.9.2/build/vanilla-calendar.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

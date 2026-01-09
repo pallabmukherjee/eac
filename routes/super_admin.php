@@ -6,10 +6,7 @@ use App\Http\Controllers\SuperAdmin\WebsiteSettingController;
 use App\Http\Controllers\SuperAdmin\UserRoleController;
 use App\Http\Controllers\SuperAdmin\UserController;
 use App\Http\Controllers\SuperAdmin\SuperAdminDashboardController;
-use App\Http\Controllers\EmployeeType\EmployeeTypeController;
-use App\Http\Controllers\EmployeeLeave\EmployeeLeaveController;
-use App\Http\Controllers\EmployeeLeave\EmployeeEnjoyedsControlller;
-use App\Http\Controllers\EmployeeLeave\LeaveReportsController;
+use App\Http\Controllers\Leave\LeaveController;
 use App\Http\Controllers\Account\MajorHeadController;
 use App\Http\Controllers\Account\MinorHeadController;
 use App\Http\Controllers\Account\DetailedHeadController;
@@ -63,40 +60,44 @@ Route::prefix('role')->name('role.')->group(function () {
 });
 
 Route::prefix('leave')->name('leave.')->group(function () {
+    Route::get('/dashboard', [LeaveController::class, 'dashboard'])->name('dashboard');
+
     Route::prefix('/type')->name('type.')->group(function () {
-        Route::get('/add', [EmployeeTypeController::class, 'add'])->name('add');
-        Route::get('/', [EmployeeTypeController::class, 'list'])->name('list');
-        Route::post('/employee-types', [EmployeeTypeController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [EmployeeTypeController::class, 'edit'])->name('edit');
-        Route::post('/update/{id}', [EmployeeTypeController::class, 'update'])->name('update');
-        Route::delete('employeeTypes/{id}', [EmployeeTypeController::class, 'destroy'])->name('destroy');
+        Route::get('/add', [LeaveController::class, 'employeeTypeAdd'])->name('add');
+        Route::get('/', [LeaveController::class, 'employeeTypeList'])->name('list');
+        Route::post('/employee-types', [LeaveController::class, 'employeeTypeStore'])->name('store');
+        Route::get('/edit/{id}', [LeaveController::class, 'employeeTypeEdit'])->name('edit');
+        Route::post('/update/{id}', [LeaveController::class, 'employeeTypeUpdate'])->name('update');
+        Route::delete('employeeTypes/{id}', [LeaveController::class, 'employeeTypeDestroy'])->name('destroy');
     });
 
     Route::prefix('/employee')->name('employee.')->group(function () {
-        Route::get('/', [EmployeeLeaveController::class, 'index'])->name('index');
-        Route::get('/add', [EmployeeLeaveController::class, 'add'])->name('add');
-        Route::post('/store', [EmployeeLeaveController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [EmployeeLeaveController::class, 'edit'])->name('edit');
-        Route::post('/update/{id}', [EmployeeLeaveController::class, 'update'])->name('update');
-        Route::delete('employeeLeave/{id}', [EmployeeLeaveController::class, 'destroy'])->name('destroy');
+        Route::get('/', [LeaveController::class, 'employeeLeaveList'])->name('index');
+        Route::get('/add', [LeaveController::class, 'employeeLeaveAdd'])->name('add');
+        Route::post('/store', [LeaveController::class, 'employeeLeaveStore'])->name('store');
+        Route::get('/edit/{id}', [LeaveController::class, 'employeeLeaveEdit'])->name('edit');
+        Route::post('/update/{id}', [LeaveController::class, 'employeeLeaveUpdate'])->name('update');
+        Route::delete('employeeLeave/{id}', [LeaveController::class, 'employeeLeaveDestroy'])->name('destroy');
     });
 
     Route::prefix('/enjoyed')->name('enjoyed.')->group(function () {
-        Route::get('/add/{id}', [EmployeeEnjoyedsControlller::class, 'add'])->name('add');
-        Route::post('/store', [EmployeeEnjoyedsControlller::class, 'store'])->name('store');
+        Route::get('/add/{id}', [LeaveController::class, 'leaveEnjoyedAdd'])->name('add');
+        Route::post('/store', [LeaveController::class, 'leaveEnjoyedStore'])->name('store');
     });
 
     Route::prefix('/report')->name('report.')->group(function () {
-        Route::get('/', [LeaveReportsController::class, 'index'])->name('index');
-        Route::post('/report', [LeaveReportsController::class, 'storeLeaveReport'])->name('report');
-        Route::post('/download-report', [LeaveReportsController::class, 'downloadReport'])->name('download');
-        Route::post('/leave-increment/cl', [LeaveReportsController::class, 'CLincrement'])->name('increment.cl');
-        Route::post('/leave-increment/el', [LeaveReportsController::class, 'ELincrement'])->name('increment.el');
-        Route::post('/leave-increment/ml', [LeaveReportsController::class, 'MLincrement'])->name('increment.ml');
+        Route::get('/', [LeaveController::class, 'reportsIndex'])->name('index');
+        Route::post('/report', [LeaveController::class, 'reportsStoreLeaveReport'])->name('report');
+        Route::post('/download-report', [LeaveController::class, 'reportsDownloadReport'])->name('download');
 
-        Route::get('/report-create', [LeaveReportsController::class, 'create'])->name('create');
-        Route::get('/view/{report_month}', [LeaveReportsController::class, 'view'])->name('view');
-        Route::put('/update', [LeaveReportsController::class, 'update'])->name('update');
+        Route::get('/report-create', [LeaveController::class, 'reportsCreate'])->name('create');
+        Route::get('/view/{report_month}', [LeaveController::class, 'reportsView'])->name('view');
+        Route::put('/update', [LeaveController::class, 'reportsUpdate'])->name('update');
+    });
+
+    Route::prefix('/calendar')->name('calendar.')->group(function () {
+        Route::get('/', [LeaveController::class, 'leaveCalendar'])->name('index');
+        Route::post('/store', [LeaveController::class, 'storeLeaveCalendar'])->name('store');
     });
 });
 

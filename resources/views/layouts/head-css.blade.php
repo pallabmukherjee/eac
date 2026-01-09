@@ -12,3 +12,15 @@
     <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="{{ URL::asset('assets/css/style.css') }}" id="main-style-link" >
     <link rel="stylesheet" href="{{ URL::asset('assets/css/style-preset.css') }}" >
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@2.9.2/build/vanilla-calendar.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@2.9.2/build/themes/light.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@2.9.2/build/themes/dark.min.css"
+    />

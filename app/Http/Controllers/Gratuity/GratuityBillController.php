@@ -114,7 +114,7 @@ class GratuityBillController extends Controller {
 
     public function show($bill_id) {
         $report = GratuityBill::where('bill_id', $bill_id )->first();
-        $gratuityBills = GratuityBillSummary::with('empDetails')->where('bill_id', $bill_id )->orderBy('created_at', 'desc')->get();
+        $gratuityBills = GratuityBillSummary::with(['empDetails.financialYear', 'empDetails.ropaYear'])->where('bill_id', $bill_id )->orderBy('created_at', 'desc')->get();
         return view("layouts.pages.gratuity.bill.show", compact('report', 'gratuityBills'));
     }
 
@@ -226,13 +226,10 @@ class GratuityBillController extends Controller {
 
     public function pdf($bill_id) {
         $report = GratuityBill::where('bill_id', $bill_id )->first();
-        $gratuityBills = GratuityBillSummary::with('empDetails')->where('bill_id', $bill_id )->orderBy('created_at', 'desc')->get();
+        $gratuityBills = GratuityBillSummary::with(['empDetails.financialYear', 'empDetails.ropaYear'])->where('bill_id', $bill_id )->orderBy('created_at', 'desc')->get();
         $website = WebsiteSetting::first();
         $pdf = PDF::loadView('layouts.pages.gratuity.bill.pdf', compact('report', 'gratuityBills', 'website'))
-            ->setOption('margin-top', 0)
-            ->setOption('margin-left', 0)
-            ->setOption('margin-right', 0)
-            ->setOption('margin-bottom', 0);
+            ->setPaper('legal', 'landscape');
 
         return $pdf->stream('Gratuity-Report.pdf');
     }

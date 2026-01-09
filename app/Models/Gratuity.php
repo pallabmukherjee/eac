@@ -28,4 +28,11 @@ class Gratuity extends Model {
         'bank_ac_no',
         'ifsc',
     ];
+    public function financialYear() {
+        return $this->belongsTo(FinancialYear::class, 'financial_year');
+    }
+
+    public function ropaYear() {
+        return $this->belongsTo(GratuityRopaYear::class, 'ropa_year');
+    }
 }

@@ -26,36 +26,6 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 mb-5 d-flex">
-                    @if ($hasPreviousMonthData)
-                        @if (!$hasCLIncrement)
-                            <form method="POST" action="{{ route('superadmin.leave.report.increment.cl') }}">
-                                @csrf
-                                <button type="submit" class="btn btn-primary me-2">Increment Casual Leave for {{ $currentYear }}</button>
-                            </form>
-                        @endif
-
-                        @foreach (['EL' => ['January' => $showJanuaryButton, 'July' => $showJulyButton], 'ML' => ['January' => $showMLJanuaryButton, 'July' => $showMLJulyButton]] as $type => $months)
-                            @foreach ($months as $month => $showButton)
-                                @if ($showButton)
-                                    <!-- Form for EL -->
-                                    @if ($type == 'EL')
-                                        <form method="POST" action="{{ route('superadmin.leave.report.increment.el') }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary me-2">Increment {{ $type }} Leave for {{ $month }} {{ $currentYear }}</button>
-                                        </form>
-                                    @endif
-
-                                    <!-- Form for ML -->
-                                    @if ($type == 'ML')
-                                        <form method="POST" action="{{ route('superadmin.leave.report.increment.ml') }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary me-2">Increment {{ $type }} Leave for {{ $month }} {{ $currentYear }}</button>
-                                        </form>
-                                    @endif
-                                @endif
-                            @endforeach
-                        @endforeach
-                    @endif
                 </div>
 
                 <div class="col-sm-12 mb-2">

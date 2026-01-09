@@ -36,7 +36,7 @@
         <div class="col-sm-3">
             <div class="card statistics-card-1">
                 <div class="card-body">
-                    <a href="{{ route('superadmin.leave.employee.index') }}">
+                    <a href="{{ route('superadmin.leave.dashboard') }}">
                         <div class="d-flex align-items-center">
                             <div class="avtar bg-brand-color-2 text-white me-3">
                                 <i class="ph-duotone ph-airplane-tilt f-26"></i>

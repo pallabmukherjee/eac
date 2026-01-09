@@ -19,6 +19,21 @@
                         ">
                             Gratuity
                         </h1>
+                    @elseif (Str::is('superadmin.leave.*', Route::currentRouteName()))
+                        <h1 class="fw-bold mt-2" style="
+                            font-size: 2.2rem;
+                            background: linear-gradient(to right, #ff0000, #a020f0, #0000ff);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            display: inline-block;
+                            position: relative;
+                            z-index: 1;
+                            letter-spacing: 1px;
+                            white-space: nowrap;
+                            filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.6));
+                        ">
+                            Leave
+                        </h1>
                     @elseif (Str::is('superadmin.pension.*', Route::currentRouteName()))
                         <h1 class="fw-bold mt-2" style="
                             font-size: 2.2rem;
@@ -61,7 +76,7 @@
                             @if (Str::is('superadmin.account.*', Route::currentRouteName()))
                                 @include('layouts.menu-list.accounts')
                             @elseif (Str::is(['superadmin.leave.*'], Route::currentRouteName()))
-                                @include('layouts.menu-list.leave')
+                                @include('layouts.pages.leave.menu-list')
                             @elseif (Str::is('superadmin.pension.*', Route::currentRouteName()))
                                 @include('layouts.menu-list.pension')
                             @elseif (Str::is('superadmin.gratuity.*', Route::currentRouteName()))
@@ -75,7 +90,7 @@
                             @if (Str::is('superadmin.account.*', Route::currentRouteName()))
                                 @include('layouts.menu-list.admin-account')
                             @elseif (Str::is(['superadmin.leave.*'], Route::currentRouteName()))
-                                @include('layouts.menu-list.leave')
+                                @include('layouts.pages.leave.menu-list')
                             @elseif (Str::is('superadmin.pension.*', Route::currentRouteName()))
                                 @include('layouts.menu-list.pension')
                             @elseif (Str::is('superadmin.gratuity.*', Route::currentRouteName()))
