@@ -125,7 +125,7 @@
                 <td class="text-center">Dealing Assistant<br>{{ $website->organization }}</td>
                 <td width="200px"></td>
                 <td width="200px"></td>
-                <td class="text-center">In-Charge<br>{{ $website->organization }}</td>
+                <td class="text-center">In-Charge, Pension Cell<br>{{ $website->organization }}</td>
             </tr>
         </tbody>
     </table>
@@ -134,8 +134,8 @@
         <tbody>
             <tr class="no-border">
                 <td class="text-center">Accountant<br>{{ $website->organization }}</td>
-                <td class="text-center">F.O<br>{{ $website->organization }}</td>
-                <td class="text-center">E.O<br>{{ $website->organization }}</td>
+                <td class="text-center">Finance Officer<br>{{ $website->organization }}</td>
+                <td class="text-center">Executive Officer<br>{{ $website->organization }}</td>
                 <td class="text-center">Chairman<br>{{ $website->organization }}</td>
             </tr>
         </tbody>
