@@ -83,7 +83,7 @@
                 <th>Prayer Details</th>
                 <th>Voucher Details</th>
                 <th>Reference Details</th>
-                <th>Relation name(Spouse Name)</th>
+                <th>Relation Name<br>(Spouse/Warrant)</th>
                 <th>Name</th>
                 <th>PPO No.</th>
                 <th>Bank A/C No.</th>
@@ -109,7 +109,13 @@
                         No: {{ $item->reference_no ?? 'NA' }}<br>
                         Date: {{ $item->reference_date ?? 'NA' }}
                     </td>
-                    <td>{{ $item->empDetails->relation_name ?? 'NA' }}</td>
+                    <td>
+                        @if($item->empDetails->relation_died == 1)
+                            {{ $item->empDetails->warrant_name ?? 'NA' }}
+                        @else
+                            {{ $item->empDetails->relation_name ?? 'NA' }}
+                        @endif
+                    </td>
                     <td>{{ $item->empDetails->name }}</td>
                     <td>{{ $item->empDetails->ppo_number ?? 'NA' }}</td>
                     <td>{{ $item->empDetails->bank_ac_no ?? 'NA' }}</td>
