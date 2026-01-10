@@ -80,7 +80,7 @@
                 </th>
             </tr>
             <tr>
-                <th>Relation Name<br>(Spouse/Warrant)</th>
+                <th>Payee Name Details<br>(Self/Spouse/Warration)</th>
                 <th>Name</th>
                 <th>PPO No.</th>
                 <th>Bank A/C No.</th>
