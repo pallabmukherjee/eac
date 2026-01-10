@@ -228,10 +228,64 @@ class GratuityBillController extends Controller {
         $report = GratuityBill::where('bill_id', $bill_id )->first();
         $gratuityBills = GratuityBillSummary::with(['empDetails.financialYear', 'empDetails.ropaYear'])->where('bill_id', $bill_id )->orderBy('created_at', 'desc')->get();
         $website = WebsiteSetting::first();
-        $pdf = PDF::loadView('layouts.pages.gratuity.bill.pdf', compact('report', 'gratuityBills', 'website'))
+
+        // Determine which view to load based on the report status
+        $viewName = ($report->status == 2) ? 'layouts.pages.gratuity.bill.pdf' : 'layouts.pages.gratuity.bill.pending_pdf';
+
+        $pdf = PDF::loadView($viewName, compact('report', 'gratuityBills', 'website'))
             ->setPaper('legal', 'landscape');
 
         return $pdf->stream('Gratuity-Report.pdf');
+    }
+
+    public function csv($bill_id) {
+        $report = GratuityBill::where('bill_id', $bill_id)->first();
+        $gratuityBills = GratuityBillSummary::with(['empDetails.financialYear', 'empDetails.ropaYear'])->where('bill_id', $bill_id)->orderBy('created_at', 'desc')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="Gratuity-Report.csv"',
+        ];
+
+        $callback = function() use ($gratuityBills) {
+            $file = fopen('php://output', 'w');
+
+            // Add CSV headers
+            fputcsv($file, [
+                'Bill No.',
+                'Relation Name (Spouse/Warrant)',
+                'Name',
+                'PPO No.',
+                'Bank A/C No.',
+                'IFSC',
+                'Approved Amount',
+                'Financial Year',
+                'Ropa Year',
+                'Remarks'
+            ]);
+
+            foreach ($gratuityBills as $item) {
+                $relationName = ($item->empDetails->relation_died == 1) ? ($item->empDetails->warrant_name ?? 'NA') : ($item->empDetails->relation_name ?? 'NA');
+                $financialYear = $item->empDetails->financialYear->year ?? '';
+                $ropaYear = $item->empDetails->ropaYear->year ?? '';
+
+                fputcsv($file, [
+                    $item->bill_no,
+                    $relationName,
+                    $item->empDetails->name,
+                    $item->empDetails->ppo_number ?? 'NA',
+                    $item->empDetails->bank_ac_no ?? 'NA',
+                    $item->empDetails->ifsc ?? 'NA',
+                    $item->gratuity_amount,
+                    $financialYear,
+                    $ropaYear,
+                    $item->remarks
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function destroy($bill_id) {

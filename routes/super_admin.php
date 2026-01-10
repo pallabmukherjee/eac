@@ -354,6 +354,7 @@ Route::prefix('gratuity')->name('gratuity.')->group(function () {
         Route::get('/bill-edit/{bill_id}', [GratuityBillController::class, 'edit'])->name('edit');
         Route::put('/bill-update/{bill_id}', [GratuityBillController::class, 'update'])->name('update');
         Route::get('/bill-pdf/{bill_id}', [GratuityBillController::class, 'pdf'])->name('pdf');
+        Route::get('/bill-csv/{bill_id}', [GratuityBillController::class, 'csv'])->name('csv');
         Route::delete('/bill-delete/{bill_id}', [GratuityBillController::class, 'destroy'])->name('destroy');
         Route::get('/bill-approve/{bill_id}', [GratuityBillController::class, 'approve'])->name('approve');
         Route::post('/bill-approve-confirm/{bill_id}', [GratuityBillController::class, 'confirmApprove'])->name('approve.confirm');

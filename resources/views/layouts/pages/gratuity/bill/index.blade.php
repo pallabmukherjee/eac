@@ -88,6 +88,9 @@
                                             <a href="{{ route('superadmin.gratuity.bill.pdf', $item->bill_id) }}" class="btn btn-icon btn-link-success avtar-xs" target="_blank" data-bs-toggle="tooltip" title="Download PDF">
                                                 <i class="ti ti-file-download f-20"></i>
                                             </a>
+                                            <a href="{{ route('superadmin.gratuity.bill.csv', $item->bill_id) }}" class="btn btn-icon btn-info avtar-xs" target="_blank" data-bs-toggle="tooltip" title="Download CSV">
+                                                <i class="ti ti-download f-20"></i>
+                                            </a>
                                             <form action="{{ route('superadmin.gratuity.bill.destroy', $item->bill_id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this bill? This will also remove associated summary and payment records.');">
                                                 @csrf
                                                 @method('DELETE')
