@@ -74,7 +74,7 @@
     <table>
         <thead>
             <tr>
-                <th colspan="10">
+                <th colspan="12">
                     <h1>{{ $website->organization }}</h1>
                     <h1>Bill for Gratuity payment  {{$report->bill_no}}</h1>
                 </th>
@@ -82,6 +82,7 @@
             <tr>
                 <th>Prayer Details</th>
                 <th>Voucher Details</th>
+                <th>Reference Details</th>
                 <th>Relation name(Spouse Name)</th>
                 <th>Name</th>
                 <th>PPO No.</th>
@@ -103,6 +104,10 @@
                     <td>
                         No: {{ $item->voucher_no ?? 'NA' }}<br>
                         Date: {{ $item->voucher_date ?? 'NA' }}
+                    </td>
+                    <td>
+                        No: {{ $item->reference_no ?? 'NA' }}<br>
+                        Date: {{ $item->reference_date ?? 'NA' }}
                     </td>
                     <td>{{ $item->empDetails->relation_name ?? 'NA' }}</td>
                     <td>{{ $item->empDetails->name }}</td>

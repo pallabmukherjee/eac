@@ -277,7 +277,7 @@ window.addEventListener('load', function () {
 });
 
 // active menu item list start
-var elem = document.querySelectorAll('.pc-sidebar .pc-navbar a');
+var elem = document.querySelectorAll('.pc-sidebar .pc-navbar a:not(.no-auto-active)');
 for (var l = 0; l < elem.length; l++) {
   var pageUrl = window.location.href.split(/[?#]/)[0];
   if (elem[l].href == pageUrl && elem[l].getAttribute('href') != '') {
