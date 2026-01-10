@@ -95,10 +95,16 @@
             @foreach($gratuityBills as $item)
                 <tr>
                     <td>
-                        @if($item->empDetails->relation_died == 1)
-                            {{ $item->empDetails->warrant_name ?? 'NA' }}
+                        @if($item->empDetails->alive_status == 1)
+                            {{ $item->empDetails->name ?? 'NA' }}
+                        @elseif($item->empDetails->alive_status == 2)
+                            @if($item->empDetails->relation_died == 2)
+                                {{ $item->empDetails->relation_name ?? 'NA' }}
+                            @else
+                                {{ $item->empDetails->warrant_name ?? 'NA' }}
+                            @endif
                         @else
-                            {{ $item->empDetails->relation_name ?? 'NA' }}
+                            {{ 'N/A' }}
                         @endif
                     </td>
                     <td>{{ $item->empDetails->name }}</td>
