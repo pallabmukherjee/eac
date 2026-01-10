@@ -82,6 +82,7 @@
             <tr>
                 <th>Prayer Details</th>
                 <th>Voucher Details</th>
+                <th>Reference Details</th>
                 <th>Relation Name<br>(Spouse/Warrant)</th>
                 <th>Name</th>
                 <th>PPO No.</th>
@@ -103,6 +104,10 @@
                     <td>
                         No: {{ $item->voucher_no ?? 'NA' }}<br>
                         Date: {{ $item->voucher_date ?? 'NA' }}
+                    </td>
+                    <td>
+                        No: {{ $item->reference_no ?? 'NA' }}<br>
+                        Date: {{ $item->reference_date ?? 'NA' }}
                     </td>
                     <td>
                         @if($item->empDetails->relation_died == 1)
