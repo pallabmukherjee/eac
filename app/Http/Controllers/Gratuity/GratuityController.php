@@ -150,7 +150,7 @@ class GratuityController extends Controller
         foreach ($employees as $employee) {
             $formattedEmployees[] = [
                 'id' => $employee->id,
-                'text' => $employee->employee_code . ' - ' . $employee->name
+                'text' => $employee->name . ' (' . $employee->employee_code . ')'
             ];
         }
 
