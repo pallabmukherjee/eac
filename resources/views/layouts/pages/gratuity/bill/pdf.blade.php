@@ -71,6 +71,15 @@
     </style>
 </head>
 <body>
+    <script type="text/php">
+        if (isset($pdf)) {
+            $text = "Page {PAGE_NUM} of {PAGE_COUNT}";
+            $size = 10;
+            $font = $fontMetrics->getFont("helvetica");
+            $width = $fontMetrics->getTextWidth($text, $font, $size);
+            $pdf->page_text($pdf->get_width() - $width - 10, 25, $text, $font, $size);
+        }
+    </script>
     <table>
         <thead>
             <tr>
@@ -95,6 +104,7 @@
             </tr>
         </thead>
         <tbody>
+            @php $totalAmount = 0; @endphp
             @foreach($gratuityBills as $item)
                 <tr>
                     <td>
@@ -131,7 +141,12 @@
                     <td>{{ $item->empDetails->ropaYear->year ?? '' }}</td>
                     <td>{{ $item->remarks }}</td>
                 </tr>
+                @php $totalAmount += $item->gratuity_amount; @endphp
             @endforeach
+            <tr>
+                <td colspan="8" class="text-right"><b>Total Amount:</b></td>
+                <td colspan="4"><b>{{ $totalAmount }}</b></td>
+            </tr>
         </tbody>
     </table>
 
