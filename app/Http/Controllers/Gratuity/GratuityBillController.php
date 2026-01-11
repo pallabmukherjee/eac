@@ -242,9 +242,11 @@ class GratuityBillController extends Controller {
         $report = GratuityBill::where('bill_id', $bill_id)->first();
         $gratuityBills = GratuityBillSummary::with(['empDetails.financialYear', 'empDetails.ropaYear'])->where('bill_id', $bill_id)->orderBy('created_at', 'desc')->get();
 
+        $fileName = str_replace('/', '-', $report->bill_no) . '.csv';
+
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="Gratuity-Report.csv"',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
         ];
 
         $callback = function() use ($gratuityBills) {
@@ -264,10 +266,14 @@ class GratuityBillController extends Controller {
                 'Remarks'
             ]);
 
+            $totalAmount = 0;
+
             foreach ($gratuityBills as $item) {
                 $relationName = ($item->empDetails->relation_died == 1) ? ($item->empDetails->warrant_name ?? 'NA') : ($item->empDetails->relation_name ?? 'NA');
                 $financialYear = $item->empDetails->financialYear->year ?? '';
                 $ropaYear = $item->empDetails->ropaYear->year ?? '';
+                
+                $totalAmount += $item->gratuity_amount;
 
                 fputcsv($file, [
                     $item->bill_no,
@@ -282,6 +288,21 @@ class GratuityBillController extends Controller {
                     $item->remarks
                 ]);
             }
+
+            // Add Total Amount Row
+            fputcsv($file, [
+                '',
+                '',
+                '',
+                '',
+                '',
+                'Total Amount:',
+                $totalAmount,
+                '',
+                '',
+                ''
+            ]);
+
             fclose($file);
         };
 

@@ -7,7 +7,7 @@
     <style>
         body, html {
             margin: 0;
-            padding: 0;
+            padding: 25px 0;
             width: 100%;
             font-family: Arial, sans-serif;
         }
@@ -37,6 +37,8 @@
             text-align: left;
             font-family: Arial, sans-serif;
             font-size: 12px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         h1 {
             font-family: Arial, sans-serif;
@@ -71,15 +73,6 @@
     </style>
 </head>
 <body>
-    <script type="text/php">
-        if (isset($pdf)) {
-            $text = "Page {PAGE_NUM} of {PAGE_COUNT}";
-            $size = 10;
-            $font = $fontMetrics->getFont("helvetica");
-            $width = $fontMetrics->getTextWidth($text, $font, $size);
-            $pdf->page_text($pdf->get_width() - $width - 10, 25, $text, $font, $size);
-        }
-    </script>
     <table>
         <thead>
             <tr>
@@ -157,5 +150,15 @@
             </tr>
         </tbody>
     </table>
+    
+    <script type="text/php">
+        if (isset($pdf)) {
+            $text = "Page {PAGE_NUM} of {PAGE_COUNT}";
+            $size = 10;
+            $font = $fontMetrics->getFont("helvetica");
+            $width = $fontMetrics->getTextWidth($text, $font, $size);
+            $pdf->page_text($pdf->get_width() - $width - 5, $pdf->get_height() - 17, $text, $font, $size);
+        }
+    </script>
 </body>
 </html>
