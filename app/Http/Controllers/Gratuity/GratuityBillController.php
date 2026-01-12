@@ -249,59 +249,116 @@ class GratuityBillController extends Controller {
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
         ];
 
-        $callback = function() use ($gratuityBills) {
+        $callback = function() use ($gratuityBills, $report) {
             $file = fopen('php://output', 'w');
 
-            // Add CSV headers
-            fputcsv($file, [
-                'Bill No.',
-                'Relation Name (Spouse/Warrant)',
-                'Name',
-                'PPO No.',
-                'Bank A/C No.',
-                'IFSC',
-                'Approved Amount',
-                'Financial Year',
-                'Ropa Year',
-                'Remarks'
-            ]);
+            if ($report->status == 2) {
+                // Headers for Approved/Accepted status
+                fputcsv($file, [
+                    'Sl. No.',
+                    'Prayer No',
+                    'Prayer Date',
+                    'Voucher No',
+                    'Voucher Date',
+                    'Reference No',
+                    'Reference Date',
+                    'Payee Name (Self/Spouse/Others)',
+                    'Name',
+                    'PPO No.',
+                    'Bank A/C No.',
+                    'IFSC',
+                    'Approved Amount',
+                    'Financial Year',
+                    'Ropa Year',
+                    'Remarks'
+                ]);
+            } else {
+                // Headers for Pending status
+                fputcsv($file, [
+                    'Sl. No.',
+                    'Payee Name (Self/Spouse/Others)',
+                    'Name',
+                    'PPO No.',
+                    'Bank A/C No.',
+                    'IFSC',
+                    'Approved Amount',
+                    'Financial Year',
+                    'Ropa Year',
+                    'Remarks'
+                ]);
+            }
 
             $totalAmount = 0;
 
-            foreach ($gratuityBills as $item) {
-                $relationName = ($item->empDetails->relation_died == 1) ? ($item->empDetails->warrant_name ?? 'NA') : ($item->empDetails->relation_name ?? 'NA');
+            foreach ($gratuityBills as $index => $item) {
+                // Logic for Payee Name
+                if ($item->empDetails->alive_status == 1) {
+                    $relationName = $item->empDetails->name ?? 'NA';
+                } elseif ($item->empDetails->alive_status == 2) {
+                    if ($item->empDetails->relation_died == 2) {
+                        $relationName = $item->empDetails->relation_name ?? 'NA';
+                    } else {
+                        $relationName = $item->empDetails->warrant_name ?? 'NA';
+                    }
+                } else {
+                    $relationName = 'N/A';
+                }
+
                 $financialYear = $item->empDetails->financialYear->year ?? '';
                 $ropaYear = $item->empDetails->ropaYear->year ?? '';
                 
                 $totalAmount += $item->gratuity_amount;
+                $slNo = $index + 1;
 
-                fputcsv($file, [
-                    $item->bill_no,
-                    $relationName,
-                    $item->empDetails->name,
-                    $item->empDetails->ppo_number ?? 'NA',
-                    $item->empDetails->bank_ac_no ?? 'NA',
-                    $item->empDetails->ifsc ?? 'NA',
-                    $item->gratuity_amount,
-                    $financialYear,
-                    $ropaYear,
-                    $item->remarks
-                ]);
+                if ($report->status == 2) {
+                    fputcsv($file, [
+                        $slNo,
+                        $item->prayer_no ?? 'NA',
+                        $item->prayer_date ?? 'NA',
+                        $item->voucher_no ?? 'NA',
+                        $item->voucher_date ?? 'NA',
+                        $item->reference_no ?? 'NA',
+                        $item->reference_date ?? 'NA',
+                        $relationName,
+                        $item->empDetails->name,
+                        $item->empDetails->ppo_number ?? 'NA',
+                        $item->empDetails->bank_ac_no ?? 'NA',
+                        $item->empDetails->ifsc ?? 'NA',
+                        $item->gratuity_amount,
+                        $financialYear,
+                        $ropaYear,
+                        $item->remarks
+                    ]);
+                } else {
+                    fputcsv($file, [
+                        $slNo,
+                        $relationName,
+                        $item->empDetails->name,
+                        $item->empDetails->ppo_number ?? 'NA',
+                        $item->empDetails->bank_ac_no ?? 'NA',
+                        $item->empDetails->ifsc ?? 'NA',
+                        $item->gratuity_amount,
+                        $financialYear,
+                        $ropaYear,
+                        $item->remarks
+                    ]);
+                }
             }
 
             // Add Total Amount Row
-            fputcsv($file, [
-                '',
-                '',
-                '',
-                '',
-                '',
-                'Total Amount:',
-                $totalAmount,
-                '',
-                '',
-                ''
-            ]);
+            if ($report->status == 2) {
+                 fputcsv($file, [
+                    '', '', '', '', '', '', '', '', '', '', '', 'Total Amount:',
+                    $totalAmount,
+                    '', '', ''
+                ]);
+            } else {
+                 fputcsv($file, [
+                    '', '', '', '', '', 'Total Amount:',
+                    $totalAmount,
+                    '', '', ''
+                ]);
+            }
 
             fclose($file);
         };

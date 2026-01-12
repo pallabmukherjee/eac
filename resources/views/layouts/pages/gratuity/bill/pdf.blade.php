@@ -76,16 +76,17 @@
     <table>
         <thead>
             <tr>
-                <th colspan="12">
+                <th colspan="13">
                     <h1>{{ $website->organization }}</h1>
                     <h1>Bill for Gratuity payment  {{$report->bill_no}}</h1>
                 </th>
             </tr>
             <tr>
+                <th>Sl. No.</th>
                 <th>Prayer Details</th>
                 <th>Voucher Details</th>
                 <th>Reference Details</th>
-                <th>Payee Name Details<br>(Self/Spouse/Warration)</th>
+                <th>Payee Name Details<br>(Self/Spouse/Others)</th>
                 <th>Name</th>
                 <th>PPO No.</th>
                 <th>Bank A/C No.</th>
@@ -100,6 +101,7 @@
             @php $totalAmount = 0; @endphp
             @foreach($gratuityBills as $item)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>
                         No: {{ $item->prayer_no ?? 'NA' }}<br>
                         Date: {{ $item->prayer_date ?? 'NA' }}
@@ -137,7 +139,7 @@
                 @php $totalAmount += $item->gratuity_amount; @endphp
             @endforeach
             <tr>
-                <td colspan="8" class="text-right"><b>Total Amount:</b></td>
+                <td colspan="9" class="text-right"><b>Total Amount:</b></td>
                 <td colspan="4"><b>{{ $totalAmount }}</b></td>
             </tr>
         </tbody>
