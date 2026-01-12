@@ -87,7 +87,7 @@
                 <th>Voucher Details</th>
                 <th>Reference Details</th>
                 <th>Payee Name Details<br>(Self/Spouse/Others)</th>
-                <th>Name</th>
+                <th>Employee Name</th>
                 <th>PPO No.</th>
                 <th>Bank A/C No.</th>
                 <th>IFSC</th>
