@@ -171,6 +171,7 @@
         initSelect2('.emp-select');
 
         $(document).on('click', '.add-row', function() {
+            const $currentRow = $(this).closest('.application-row');
             const $newRow = $('.application-row:first').clone();
             $newRow.find('input').val('');
             $newRow.find('input[name="prayer_date[]"]').val("{{ date('Y-m-d') }}");
@@ -178,7 +179,7 @@
             $newRow.find('.emp-select').removeClass('select2-hidden-accessible').removeAttr('data-select2-id').empty().append('<option value="">Search Employee</option>');
             $newRow.find('.loan-section').addClass('d-none');
             $newRow.find('.loan-rows-container').empty();
-            $('#application-rows').append($newRow);
+            $currentRow.after($newRow);
             initSelect2($newRow.find('.emp-select'));
         });
 
