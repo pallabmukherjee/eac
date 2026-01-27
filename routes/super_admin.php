@@ -130,6 +130,8 @@ Route::prefix('account')->name('account.')->group(function () {
 
     Route::prefix('/ledgerhead')->name('ledgerhead.')->group(function () {
         Route::get('/', [LedgerHeadController::class, 'index'])->name('index');
+        Route::get('/export-pdf', [LedgerHeadController::class, 'exportPdf'])->name('export-pdf');
+        Route::get('/export-excel', [LedgerHeadController::class, 'exportExcel'])->name('export-excel');
         Route::post('/update-detailed-head', [LedgerHeadController::class, 'updateDetailedHead'])->name('update');
     });
 
